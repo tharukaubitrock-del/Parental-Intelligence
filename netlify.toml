@@ -1,0 +1,10 @@
+[build]
+  # we’re just serving static + functions, no build command
+  publish   = "."                
+  functions = "netlify/functions"
+
+[[redirects]]
+  # proxy any /api/payhere/* to the matching Function
+  from   = "/api/payhere/*"
+  to     = "/.netlify/functions/:splat"
+  status = 200

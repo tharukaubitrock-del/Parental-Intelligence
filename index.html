@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PI+ – Your Personal Parenting Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/img/logo.png" type="image/x-icon">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOQvuRNgJB4Y2YxSP3wwxUCESJ8aREJBA",
+      authDomain: "parental-intelligence.firebaseapp.com",
+      projectId: "parental-intelligence",
+      storageBucket: "parental-intelligence.firebasestorage.app",
+      messagingSenderId: "392531854283",
+      appId: "1:392531854283:web:8698d5a250f82aa54d6c4e",
+      measurementId: "G-Z699GWB1CP"
+    };
+  
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body class="initializing">
+  <!-- Login/Register Overlay -->
+  <div id="overlay" class="overlay">
+    <div class="card">
+      <img src="/img/logo.png" alt="PI+ Logo" width="200" height="200" />
+      <h2 id="slogan">For the Parent in All of Us.</h2>
+      <div class="privacy">Your privacy is our top priority. Conversations are confidential.</div>
+      <label>Email:</label>
+      <input type="email" id="input-email" placeholder="you@example.com" />
+      <label>Password:</label>
+      <input type="password" id="input-pass" placeholder="••••••••" />
+      <div class="auth-buttons">
+        <button id="login">Login</button>
+        <div class="easy-links">
+          <a href="#" id="forgot-password-link">Forgot password?</a>
+        </div>
+        <div class="easy-links">
+          Don’t have an account?
+          <a href="register.html">Sign up</a>
+        </div>
+      </div>
+      <div class="lang-buttons">
+        <button id="lang-en" class="active">English</button>
+        <button id="lang-si">සිංහල</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard with sidebar (hidden until login) -->
+  <div id="dashboard" class="dashboard hidden">
+    <aside class="sidebar">
+      <!-- New Chat Section -->
+      <button id="new-chat">＋ New Chat</button>
+
+      <!-- Child Stage Section -->
+      <div class="sidebar-section">
+        <h3>Child Stage</h3>
+        <select id="sidebar-stage-select">
+          <option value="" disabled selected>Select your child's age</option>
+          <option>Small (Ages 2–8)</option>
+          <option>Tween (Ages 9–13)</option>
+          <option>Teen (Ages 14+)</option>
+        </select>
+      </div>
+
+      <!-- Chat History Section -->
+      <h3>Chats</h3>
+      <ul id="chat-list"></ul>
+
+      <div class="user-menu">
+        <button id="user-menu-btn" aria-label="Open user menu">
+          <!-- User icon SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M4 21v-2a4 4 0 0 1 3-3.87" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span id="profile-name" class="user-name">Username</span>
+        </button>
+      
+        <div id="user-menu-popup" class="user-menu-popup">
+          <button id="open-settings-btn" class="sidebar-button">User Settings</button>
+          <button id="logout-btn" class="sidebar-button">Log Out</button>
+        </div>
+      </div>
+
+      <!-- Subscribe Section -->
+      <button id="subscribe-btn" class="sidebar-button">
+        Subscribe
+      </button>
+      
+    </aside>
+
+    <div class="main-panel">
+      <header>
+        <!-- In header -->
+        <button id="menu-toggle" class="hamburger">&#9776;</button>
+        <h1>PI+</h1>
+        <span class="powered">
+          🇱🇰 Powered by BITROCK
+          <img src="/img/btr-logo.png" alt="Bitrock Logo" class="bitrock-logo">
+        </span>
+      </header>
+
+      <div class="tagline" id="tagline">Because every parent deserves answers, empathy, and peace of mind.</div>
+      <div class="tagline" id="tagline-si" style="display:none;">හැම දෙමුඔපියෙකුටම පිළිතුරු, කරුණාව සහ සිතේ සන්ද්‍රතාව හිමි විය යුතුය.</div>
+
+      <div class="chat" id="chat"></div>
+
+      <div class="input-area">
+        <!-- <textarea id="user-input" rows="1" placeholder="Type anything, I’m here for you…"></textarea> -->
+        <textarea id="user-input" rows="1" placeholder="Type anything, I’m here for you…"></textarea>
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage selection modal -->
+  <div id="stage-modal" class="overlay hidden">
+    <div class="card">
+      <h3>Select Child Stage</h3>
+      <select id="input-stage">
+        <option>Small (Ages 2–8)</option>
+        <option>Tween (Ages 9–13)</option>
+        <option>Teen (Ages 14+)</option>
+      </select>
+      <button id="stage-save">Save</button>
+    </div>
+  </div>
+
+  <!-- Language selection modal -->
+  <div id="language-modal" class="overlay hidden">
+    <div class="card">
+      <h3>Select Language</h3>
+      <div class="lang-buttons">
+        <button id="lang-select-en">English</button>
+        <button id="lang-select-si">සිංහල</button>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- Redesigned Fullscreen Settings Modal -->
+  <div id="settings-overlay" class="overlay hidden">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>Account Settings</h2>
+        <button id="close-settings-btn" class="close-btn">×</button>
+      </div>
+
+      <section class="settings-section">
+        <h3>Account</h3>
+        <div class="user-box">
+          <div class="avatar-circle">P</div>
+          <div class="user-info">
+            <div id="settings-name" class="user-fullname">Parental Intelligence</div>
+            <div id="settings-email" class="user-email">email@example.com</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Full Name</label>
+          <p id="field-fullname">Parental Intelligence</p>
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <p id="field-email">email@example.com</p>
+        </div>
+        <div class="field-group">
+          <label>Mobile Phone</label>
+          <p id="field-phone">+94 712345678</p>
+        </div>
+
+      <section class="settings-section">
+        <h3>Subscription</h3>
+        <p class="sub-text">You have no active subscription at this time.</p>
+      </section>
+
+      <section class="settings-section">
+        <h3>About</h3>
+        <ul class="link-list">
+          <li><a href="terms.html#terms" target="_blank">Terms & Conditions</a></li>
+          <li><a href="terms.html#privacy" target="_blank">Privacy Policy</a></li>
+          <li><a href="terms.html#refund" target="_blank">Refund Policy</a></li>
+          <li><a href="help.html" target="_blank">Help Centre</a></li>
+        </ul>
+      </section>
+
+      <div class="logout-section">
+        <button id="maslogout-btn" class="logout-btn">Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="script.js"></script>
+  <script src="https://www.payhere.lk/lib/payhere.js"></script>
+</body>
+</html>

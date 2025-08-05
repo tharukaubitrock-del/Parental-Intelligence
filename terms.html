@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PI+ – Terms & Policies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/img/logo.png" type="image/x-icon">
+
+  <style>
+
+    :root {
+      --header-height: 60px;
+      --mobile-header-height: 80px;
+    }
+
+    body {
+      padding-top: calc(var(--header-height) + 0.01em);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px){
+      body.no-scroll {
+      overflow: hidden;
+      /* fix its height so mobile doesn’t “rubber-band” */
+      height: 100vh;
+      position: relative;
+      width: 100%;
+    }
+    }
+    
+
+    html { 
+      scroll-padding-top: calc(var(--header-height) + 1em);
+      scroll-behavior: smooth;
+    }
+
+    .policy-nav {
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 200px;
+      padding: 2em 1em;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid #e1eef4;
+    }
+    .policy-nav ul { list-style: none; margin: 0; padding: 0; }
+    .policy-nav li { margin: 1em 0; }
+    .policy-nav a {
+      display: block;
+      color: #13455D;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.6em 0.8em;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      font-size: 0.9em;
+    }
+    .policy-nav a:hover,
+    .policy-nav a:focus {
+      background: #e1eef4;
+      transform: translateX(2px);
+    }
+
+    .policy-content {
+      font-family: 'Manrope', sans-serif;
+      margin: 0 auto;
+      max-width: 800px;
+      padding: 1.5em 1em;
+      color: #000;
+    }
+    .policy-content section {
+      font-family: 'Manrope', sans-serif;
+      margin-bottom: 4em;
+    }
+    .policy-content h2 {
+      font-family: 'Manrope', sans-serif;
+      text-align: center;
+      color: #13455D;
+      font-size: clamp(2.5rem, 5vw, 3.75rem);
+      margin-bottom: 0.5em;
+      margin-block-start: 1.5em;    
+      margin-block-end: 0.5em;
+      font-weight: 600;
+    }
+    .policy-content h3 {
+      font-family: 'Manrope', sans-serif;
+      margin-top: 1.5em;
+      color: black;
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      font-weight: 600;
+    }
+
+    .policy-content h4 {
+      margin-block-start: 1em;
+      margin-block-end: 0.4em;
+      font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+      font-weight: 600;
+    }
+
+    .policy-content p {
+      font-family: 'Manrope', sans-serif;
+      line-height: 1.6;
+      margin: 0.8em 0;
+      text-align: left;
+      font-size: clamp(0.95rem, 2vw, 1rem);
+    }
+    .policy-content ul { 
+      margin: 0.8em 0 1.2em 1.5em;
+      line-height: 1.6;
+    }
+    .policy-content li {
+      margin-bottom: 0.5em;
+      font-size: clamp(0.95rem, 2vw, 1rem);
+    }
+
+    .policy-content section[id] {
+      scroll-margin-top: calc(var(--header-height) + 1em);
+    }
+
+    .policy-content h2,
+    .policy-content h3 {
+      scroll-margin-top: calc(var(--header-height) + 1em);
+    }
+
+    /* Mobile Navigation Toggle */
+    .mobile-nav-toggle {
+      display: none;
+      position: absolute;
+      top: calc(var(--mobile-header-height) + 0.5em);
+      left: 15px;
+      z-index: 999;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #13455D;
+      color: #13455D;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 1024px) {
+      .policy-nav {
+        width: 180px;
+      }
+      .policy-content {
+        margin-left: 200px;
+        max-width: 700px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-height: var(--mobile-header-height);
+      }
+
+      body {
+        padding-top: calc(var(--mobile-header-height) + 1em);
+        font-size: 16px;
+      }
+
+      .mobile-nav-toggle {
+        display: block;
+      }
+
+      .policy-nav {
+        transform: translateX(-100%);
+        width: 280px;
+        height: 100vh;
+        overflow-y: auto;
+        transition: transform 0.3s ease;
+        top: var(--mobile-header-height);
+        z-index: 998;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      }
+
+      .policy-nav ul {
+        
+        margin-top: 2em;
+      }
+
+      .policy-nav.active {
+        transform: translateX(0);
+      }
+
+      .policy-nav a {
+        padding: 1em;
+        font-size: 1rem;
+        border-bottom: 1px solid #f0f6f9;
+      }
+
+      .policy-content {
+        margin-left: 0;
+        max-width: none;
+        padding: 1.5em 1em;
+      }
+
+      .policy-content h2 {
+        margin-block-start: 1em;
+        text-align: left;
+      }
+
+      .policy-content h3 {
+        margin-top: 1.2em;
+      }
+
+      .policy-content p {
+        margin: 0.7em 0;
+      }
+
+      .policy-content ul {
+        margin: 0.7em 0 1em 1.2em;
+      }
+
+      html {
+        scroll-padding-top: calc(var(--mobile-header-height) + 1em);
+      }
+
+      .policy-content section[id],
+      .policy-content h2,
+      .policy-content h3 {
+        scroll-margin-top: calc(var(--mobile-header-height) + 1em);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .policy-content {
+        padding: 1em 0.8em;
+      }
+
+      .policy-nav {
+        width: 100%;
+        padding: 1.5em 1em;
+      }
+
+      .policy-content p,
+      .policy-content li {
+        font-size: 0.95rem;
+      }
+
+      .policy-content ul {
+        margin-left: 1em;
+      }
+    }
+
+      #backToTop {
+      position: fixed;
+      bottom: 1.5em;
+      right: 1.5em;
+      width: 3em;
+      height: 3em;
+      background: #fff;
+      border: 2px solid #13455D;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #13455D;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 1000;
+    }
+
+    /* when scrolled down, show it */
+    #backToTop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+  </style>
+</head>
+<body>
+    <button class="mobile-nav-toggle" onclick="toggleMobileNav()">☰ Menu</button>
+    
+    <header style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #13455D;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+    z-index: 1000;
+    ">
+        <h1 style="margin:0;">PI+</h1>
+        <span style="font-size:0.85em;">🇱🇰 Powered by BITROCK</span>
+    </header>
+
+  <nav class="policy-nav" id="policyNav">
+    <ul>
+      <li><a href="#terms" onclick="closeMobileNav()">Terms &amp; Conditions</a></li>
+      <li><a href="#privacy" onclick="closeMobileNav()">Privacy Policy</a></li>
+      <li><a href="#refund" onclick="closeMobileNav()">Refund Policy</a></li>
+    </ul>
+  </nav>
+
+  <div class="policy-content">
+
+    <section id="terms">
+      <h2>Terms &amp; Conditions</h2>
+      <p><strong>Effective Date:</strong> 07/07/25<br><strong>Last Updated:</strong> 07/07/25</p>
+
+      <h3>1. Acknowledgment</h3>
+      <p>These are the Terms and Conditions governing the use of this Service and the agreement that operates between You and the Company. Your access to and use of the Service is conditioned on Your acceptance of and compliance with these Terms and Conditions. These Terms apply to all visitors, users, and others who access or use the Service. By accessing or using the Service You agree to be bound by these Terms. If You disagree with any part of these Terms, then You may not access the Service. You represent that you are over the age of 18. The Company does not permit those under 18 to use the Service. Your access is also conditioned on acceptance of our Privacy Policy.</p>
+
+      <h3>2. Description of Service</h3>
+      <p>Our Service provides AI-generated advice and information related to children under 18 years of age. Upon registration, users receive 100 tokens monthly to use the Service. To access unlimited tokens, users must subscribe to a premium plan.</p>
+
+      <h3>3. Important Disclaimers</h3>
+      <h4>3.1 Not Professional Advice</h4>
+      <p>Important: Our Service provides general information and AI-generated suggestions only. It does NOT provide professional medical, legal, counseling, or emergency services.</p>
+      <h4>3.2 Limitation of AI Advice</h4>
+      <p>All advice is generated by artificial intelligence and may not be accurate or appropriate for your situation. AI responses may be outdated or based on incomplete information. Our AI system cannot replace human judgment or professional expertise.</p>
+      <h4>3.3 Emergency Situations</h4>
+      <p>Do not use this Service for emergencies. If you are experiencing a medical emergency or child safety concern, immediately contact local emergency services.</p>
+
+      <h3>4. User Responsibilities</h3>
+      <h4>4.1 Account Registration</h4>
+      <ul>
+        <li>You must provide accurate and complete information during registration.</li>
+        <li>You are responsible for maintaining account security.</li>
+        <li>You must be at least 18 years old to use this Service.</li>
+        <li>Only one account per person is allowed.</li>
+      </ul>
+      <h4>4.2 Appropriate Use</h4>
+      <ul>
+        <li>Use the Service only for lawful purposes.</li>
+        <li>Do not seek emergency advice, provide false child information, or attempt to circumvent token limits.</li>
+        <li>Do not share your account credentials.</li>
+      </ul>
+      <h4>4.3 Parental Responsibility</h4>
+      <p>You acknowledge you are the parent or legal guardian of any child about whom you seek advice. You remain responsible for all decisions regarding your child's care.</p>
+
+      <h3>5. Tokens and Subscription</h3>
+      <h4>5.1 Monthly Token Allocation</h4>
+      <ul>
+        <li>New users receive 100 tokens per month at no charge.</li>
+        <li>Unused tokens do not roll over.</li>
+      </ul>
+      <h4>5.2 Unlimited Access via Subscription</h4>
+      <ul>
+        <li>Users may subscribe to a premium plan for unlimited tokens.</li>
+        <li>Subscriptions are recurring and can be managed or canceled anytime.</li>
+      </ul>
+      <h4>5.3 Payment Terms</h4>
+      <p>Payment is required at subscription. We accept major credit cards and other methods. All prices are in LKR and subject to change.</p>
+
+      <h3>6. Intellectual Property</h3>
+      <p>The Service, including all AI algorithms, content, and materials, is owned by us. You may not copy, modify, distribute, or create derivative works.</p>
+
+      <h3>7. User Accounts</h3>
+      <p>You are responsible for safeguarding your password and all activities under your account. Notify us immediately of any breach.</p>
+
+      <h3>8. Content Restrictions</h3>
+      <p>You may not transmit unlawful, defamatory, obscene, or harmful content. We reserve the right to remove inappropriate content and limit or revoke Service access.</p>
+
+      <h3>9. Content Backups</h3>
+      <p>We perform regular backups but do not guarantee no data loss. You should maintain an independent copy of your content.</p>
+
+      <h3>10. Links to Other Websites</h3>
+      <p>Our Service may contain links to third-party sites. We are not responsible for their content or policies. Review their terms and privacy policies before use.</p>
+
+      <h3>11. Termination</h3>
+      <p>We may terminate or suspend your account immediately for breach of terms. You may terminate by discontinuing use.</p>
+
+      <h3>12. Disclaimer of Warranties &amp; Liability</h3>
+      <p>The Service is provided “AS IS” and “AS AVAILABLE.” We disclaim all warranties and are not liable for indirect or consequential damages. Our total liability will not exceed amounts paid.</p>
+
+      <h3>13. Indemnification</h3>
+      <p>You agree to indemnify and hold us harmless from claims arising out of your use of the Service or violation of these Terms.</p>
+
+      <h3>14. Severability &amp; Waiver</h3>
+      <p>If any provision is unenforceable, it will be modified to accomplish its objective, and other provisions remain in effect. Failure to enforce a right is not a waiver.</p>
+
+      <h3>15. Changes to Terms</h3>
+      <p>We reserve the right to modify these Terms at our discretion. Continued use after changes constitutes acceptance.</p>
+
+      <h3>16. Governing Law &amp; Dispute Resolution</h3>
+      <p>These Terms are governed by the laws of Sri Lanka. Disputes will first attempt good-faith negotiation, then be subject to Sri Lankan courts.</p>
+
+      <h3>17. Assignment</h3>
+      <p>You may not assign these Terms without our consent. We may assign without restriction.</p>
+    </section>
+
+    <section id="privacy">
+      <h2>Privacy Policy</h2>
+      <p><strong>Effective Date:</strong> 07/07/25<br><strong>Last Updated:</strong> 07/07/25</p>
+
+      <h3>1. Nature of Service &amp; Disclaimers</h3>
+      <p>This Privacy Policy outlines how we collect, use, disclose, and safeguard your personal data when you use our Service, which provides AI-generated responses. We do not provide professional advice and disclaim liability for actions taken based on content, omissions, or outdated information.</p>
+
+      <h3>2. Eligibility &amp; Intended Users</h3>
+      <p>Our Service is for adults (18+) regarding children under 18. We do not knowingly collect data from children under 18.</p>
+
+      <h3>3. Data We Collect</h3>
+      <h4>a) Personal Data You Provide</h4>
+      <ul>
+        <li>Full name</li>
+        <li>Email address</li>
+        <li>Contact number</li>
+        <li>Location or address</li>
+        <li>Payment details (via third-party)</li>
+        <li>Account and registration data</li>
+      </ul>
+      <h4>b) Automatically Collected Data</h4>
+      <ul>
+        <li>IP address</li>
+        <li>Device identifiers</li>
+        <li>Browser type &amp; version</li>
+        <li>Operating system</li>
+        <li>Referral URLs &amp; timestamps</li>
+        <li>Pages visited and interaction times</li>
+      </ul>
+      <h4>c) Tracking Technologies &amp; Cookies</h4>
+      <p>We use cookies to authenticate users, save preferences, analyze usage, and enhance experience. You can refuse cookies but functionality may be affected.</p>
+
+      <h3>4. Use of Collected Data</h3>
+      <ul>
+        <li>Provide and maintain the Service.</li>
+        <li>Manage your account.</li>
+        <li>Contact you via email, SMS, or push notifications.</li>
+        <li>Send news, offers, and information unless opted out.</li>
+        <li>Business transfers, mergers, and acquisitions.</li>
+        <li>Analyze trends, improve services, and marketing.</li>
+      </ul>
+
+      <h3>5. Disclosure of Your Data</h3>
+      <ul>
+        <li>With Service Providers for analytics, payment processing, contact.</li>
+        <li>During business transfers or acquisitions.</li>
+        <li>With affiliates bound by this Policy.</li>
+        <li>With business partners for promotions.</li>
+        <li>With your consent for other purposes.</li>
+      </ul>
+
+      <h3>6. Data Retention</h3>
+      <p>Retained only as long as necessary to fulfill purposes, comply with laws, resolve disputes, and enforce terms. Anonymized data may be kept indefinitely.</p>
+
+      <h3>7. Data Transfers</h3>
+      <p>Your data may be processed and stored outside your jurisdiction with differing data laws. Your consent represents agreement to those transfers.</p>
+
+      <h3>8. Your Data Protection Rights</h3>
+      <ul>
+        <li>Access, update, or delete your data.</li>
+        <li>Correct incomplete or inaccurate data.</li>
+        <li>Object to processing for direct marketing.</li>
+        <li>Request erasure when no good reason to continue processing.</li>
+        <li>Request data transfer in a machine-readable format.</li>
+        <li>Withdraw consent at any time.</li>
+      </ul>
+
+      <h3>9. Data Security</h3>
+      <p>We use administrative, technical, and physical measures to protect data. However, no Internet transmission is 100% secure.</p>
+
+      <h3>10. Payment Processing</h3>
+      <p>Payments processed by third parties (e.g., PayHere). We do not store card information. Subject to providers' privacy policies.</p>
+
+      <h3>11. Third-Party Links & Tools</h3>
+      <p>Our Service may link to external sites. We are not responsible for their privacy practices.</p>
+
+      <h3>12. Changes to This Policy</h3>
+      <p>We may update this Policy for legal or regulatory reasons. Updates will be posted with a revised date.</p>
+
+      <h3>13. Contact Us</h3>
+      <p>For privacy concerns, email parentalintelligencepi@gmail.com.</p>
+    </section>
+
+    <section id="refund">
+
+      <p>At Parental Intelligence, we are dedicated to supporting parents through our AI-powered parenting assistant. We strive to deliver a high-quality and valuable experience to every subscriber.</p>
+
+      <h2>Refund Policy</h2>
+      <p><strong>Effective Date:</strong> 07/07/25<br><strong>Last Updated:</strong> 07/07/25</p>
+
+      <h3>Subscription Cancellations</h3>
+      <p>You may cancel your subscription at any time through your account settings. Once canceled, your access will remain active through the end of your current billing period. No further charges will be made after that date.</p>
+      <p><strong>Note:</strong> Please note: We do not provide prorated refunds for unused portions of your subscription.</p>
+
+      <h3>Refunds</h3>
+      <p>Because our service is digital and accessible immediately upon purchase, we generally <strong>do not offer refunds.</strong> However, we will consider refund requests under the following exceptional circumstances:</p>
+      <ul>
+        <li>You were charged more than once in error.</li>
+        <li>You experienced a verified technical issue that prevented access to the platform, and we were unable to resolve it within a reasonable time frame.</li>
+      </ul>
+      <p>To request a refund under these conditions, please contact our support team at parentalintelligencepi@gmail.com within 7 days of the billing date. All refund decisions are made at our sole discretion.</p>
+
+      <h3>Non-Refundable Circumstances</h3>
+      <ul>
+        <li>Change of mind</li>
+        <li>Lack of usage</li>
+        <li>Dissatisfaction unrelated to technical failure</li>
+        <li>Failure to cancel before next billing</li>
+      </ul>
+
+      <h3>Contact Us</h3>
+      <p>If you have any questions or concerns about your subscription, billing, or this refund policy, please reach out to us at parentalintelligencepi@gmail.com. We are here to assist you and ensure a positive experience with Parental Intelligence.</p>
+    </section>
+
+  </div>
+
+  <footer style="text-align:center; padding:1.5em 1em; background:#f0f6f9; border-top:1px solid #ccc; margin-top:2em;">
+    <small>© 2025 BITROCK. Parental Intelligence is a trademark of BITROCK. All rights reserved.</small>
+  </footer>
+
+  <button id="backToTop" aria-label="Back to top">
+    <!-- feather-style up-arrow -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+        fill="none" stroke="currentColor" stroke-width="2" 
+        stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 15 12 9 18 15"/>
+    </svg>
+  </button>
+
+  <script>
+    function toggleMobileNav() {
+      const nav = document.getElementById('policyNav');
+      nav.classList.toggle('active');
+
+      document.body.classList.toggle('no-scroll', nav.classList.contains('active'));
+    }
+
+    function closeMobileNav() {
+      const nav = document.getElementById('policyNav');
+      nav.classList.remove('active');
+
+      document.body.classList.remove('no-scroll');
+    }
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', function(event) {
+      const nav = document.getElementById('policyNav');
+      const toggle = document.querySelector('.mobile-nav-toggle');
+      
+      if (!nav.contains(event.target) && !toggle.contains(event.target)) {
+        nav.classList.remove('active');
+      }
+    });
+
+    const backBtn = document.getElementById('backToTop');
+    // when user scrolls more than 300px, show the button
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backBtn.classList.add('show');
+      } else {
+        backBtn.classList.remove('show');
+      }
+    });
+
+    // smooth scroll to top on click
+    backBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

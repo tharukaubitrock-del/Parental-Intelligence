@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to PI+</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="/img/logo.png" type="image/x-icon">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f9fbfc;
+      color: #13455D;
+    }
+    .left-section, .right-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .left-section {
+      padding: 2rem;
+      font-size: 2rem;
+      text-align: center;
+      position: relative;
+      flex-direction: column;
+      background: #0b2c42;
+      color: #ffffff;
+    }
+    .prompt {
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 1rem;
+    }
+    .icon {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+    .right-section {
+      background-color: #e4f0f8;
+      color: #13455D;
+      flex-direction: column;
+      padding: 2rem;
+      text-align: center;
+      border-left: 1px solid #c6dbe7;
+    }
+    .right-section h2 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    .tagline {
+      font-size: 1rem;
+      color: #2d5d78;
+      margin-bottom: 2rem;
+    }
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .btn {
+      background-color: #13455D;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0f374a;
+    }
+    .demo-btn {
+      background-color: transparent;
+      border: 1px solid #13455D;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      color: #13455D;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .demo-btn:hover {
+      background-color: #d4e4ef;
+    }
+    .footer {
+      font-size: 0.8rem;
+      color: #627d98;
+      margin-top: 2rem;
+    }
+    .footer a {
+      color: #627d98;
+      margin: 0 0.5rem;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="left-section">
+    <img src="/img/logo.png" alt="Parenting Icon" class="icon">
+    <div>
+      <span class="prompt" id="prompt"></span>
+    </div>
+  </div>
+  <div class="right-section">
+    <h2>Get started</h2>
+    <div class="tagline">Your AI partner in navigating parenting with confidence and compassion.</div>
+    <div class="buttons">
+      <button class="btn" onclick="window.location.href='index.html'">Log in</button>
+      <button class="btn" onclick="window.location.href='register.html'">Sign up for free</button>
+    </div>
+    <button class="demo-btn" onclick="alert('Launching a demo interaction...')">Try a sample prompt</button>
+    <div class="footer">
+      <a href="terms.html#terms">Terms of use</a> | <a href="terms.html#privacy">Privacy policy</a>
+    </div>
+  </div>
+  <script>
+    const prompts = [
+      "Help me manage my kid's screen time limits",
+      "Is it bad that I don’t always like my own kid?",
+      "My toddler said, ‘I hate you.’ I wanted to cry. Is this normal?",
+      "Is it legal to hide from your kids in the bathroom for 45 minutes?",
+      "My child is the bully. What now?",
+      "My child walked in on us. What do I say?",
+      "I caught my teen vaping. What now?",
+      "How do I talk to my daughter about periods?"
+
+    ];
+    let index = 0, charIndex = 0;
+    const promptEl = document.getElementById("prompt");
+    function type() {
+      if (charIndex < prompts[index].length) {
+        promptEl.textContent += prompts[index].charAt(charIndex);
+        charIndex++;
+        setTimeout(type, 50);
+      } else {
+        setTimeout(erase, 2000);
+      }
+    }
+    function erase() {
+      if (charIndex > 0) {
+        promptEl.textContent = prompts[index].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(erase, 30);
+      } else {
+        index = (index + 1) % prompts.length;
+        setTimeout(type, 500);
+      }
+    }
+    type();
+  </script>
+</body>
+</html>

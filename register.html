@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register – PI+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="/img/logo.png" type="image/x-icon">
+
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAOQvuRNgJB4Y2YxSP3wwxUCESJ8aREJBA",
+      authDomain: "parental-intelligence.firebaseapp.com",
+      projectId: "parental-intelligence",
+      storageBucket: "parental-intelligence.firebasestorage.app",
+      messagingSenderId: "392531854283",
+      appId: "1:392531854283:web:8698d5a250f82aa54d6c4e",
+      measurementId: "G-Z699GWB1CP"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <style>
+    .card a {
+      color: #13455D;
+      text-decoration: underline;
+    }
+    .card a:hover {
+      color: #0f374a;
+    }
+    .small-text {
+      font-size: 0.85em;
+      margin-top: 1em;
+      color: #555;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #ffffff;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="card">
+      <img src="/img/logo.png" alt="PI+ Logo" width="200" height="200" />
+      <h2>Create Your PI+ Account</h2>
+      <div class="privacy">Join us and start your parenting journey.</div>
+
+      <label>Full Name:</label>
+      <input type="text" id="full-name" placeholder="John Doe" />
+
+      <label>Email Address:</label>
+      <input type="email" id="reg-email" placeholder="you@example.com" />
+
+      <label>Phone Number:</label>
+      <input type="tel" id="reg-phone" placeholder="+94xxxxxxxxx" />
+
+      <label>Password:</label>
+      <input type="password" id="reg-pass" placeholder="••••••••" />
+
+      <button id="register-submit">
+        <span id="register-spinner" class="spinner" style="display: none;"></span>
+        <span id="register-text">Sign Up</span>
+      </button>
+
+      <div class="small-text">
+        By signing up, you agree to our
+        <a href="terms.html#terms" target="_blank">Terms</a> and
+        <a href="terms.html#privacy" target="_blank">Privacy Policy</a>
+      </div>
+
+      <div class="small-text" style="margin-top: 1em;">
+        Already have an account?
+        <a href="index.html">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const regBtn = document.getElementById('register-submit');
+    const spinner = document.getElementById('register-spinner');
+    const regText = document.getElementById('register-text');
+
+    regBtn.onclick = async () => {
+      const name  = document.getElementById('full-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const pass  = document.getElementById('reg-pass').value.trim();
+
+      if (!name || !email || !phone || !pass) {
+        return alert("Please fill in all fields.");
+      }
+
+      regBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      regText.innerText = 'Registering...';
+
+      try {
+        const cred = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+        const user = cred.user;
+
+        await user.sendEmailVerification();
+
+        const db = firebase.firestore();
+        await db.collection("users").doc(user.uid).set({
+          fullName: name,
+          email: email,
+          phone: phone,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Registration successful! A verification email has been sent.");
+        await firebase.auth().signOut();
+        window.location.href = "/";
+      } catch (err) {
+        if (err.code === 'auth/email-already-in-use') {
+          alert("This email is already registered. Please log in.");
+        } else if (err.code === 'auth/weak-password') {
+          alert("Password should be at least 6 characters.");
+        } else {
+          alert("Registration failed: " + err.message);
+        }
+        regBtn.disabled = false;
+        spinner.style.display = 'none';
+        regText.innerText = 'Sign Up';
+      }
+    };
+    
+  </script>
+</body>
+</html>
