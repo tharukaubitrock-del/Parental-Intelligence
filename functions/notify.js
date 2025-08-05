@@ -10,7 +10,7 @@ exports.handler = async (event) => {
   // Parse form-encoded body
   const data = qs.parse(event.body);
 
-  const MERCHANT_SECRET = 'Mjg1NDk0…';
+  const MERCHANT_SECRET = 'Mjg1NDk0NDk0NzI0NTYzMjQ3MjcyOTAyMjExNTc0MzI4OTcxNzgyNA==';
   const secretMd5 = crypto
     .createHash('md5')
     .update(MERCHANT_SECRET)

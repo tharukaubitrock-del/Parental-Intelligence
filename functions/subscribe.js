@@ -7,7 +7,7 @@ exports.handler = async (event) => {
   }
 
   const MERCHANT_ID     = '1231286';
-  const MERCHANT_SECRET = 'Mjg1NDk0…';
+  const MERCHANT_SECRET = 'Mjg1NDk0NDk0NzI0NTYzMjQ3MjcyOTAyMjExNTc0MzI4OTcxNzgyNA==';
 
   // Build order, hash, etc.
   const orderId    = `sub_${Date.now()}`;
