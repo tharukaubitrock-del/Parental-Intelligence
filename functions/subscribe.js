@@ -53,7 +53,7 @@ exports.handler = async (event) => {
       <!DOCTYPE html>
       <html><body>
         <form id="payhere" method="POST"
-              action="https://sandbox.payhere.lk/pay/checkout">
+              action="https://sandbox.payhere.lk/pay/o8b4bd664">
           <!-- Merchant & Order -->
           <input type="hidden" name="merchant_id" value="${MERCHANT_ID}">
           <input type="hidden" name="order_id"    value="${orderId}">
