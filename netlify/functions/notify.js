@@ -2,7 +2,7 @@
 const crypto     = require('crypto');
 const qs         = require('querystring');
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebase-service-account.json');
+const serviceAccount = require('./firebase-service.json');
 
 // Initialize once
 if (!admin.apps.length) {
