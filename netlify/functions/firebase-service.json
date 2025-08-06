@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "parental-intelligence",
+  "private_key_id": "d1f2104d8c9c3ed8611713fa6fa794a651495e87",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC+tbnhp71eF/LF\nSqUu9H0PpNKM7WQFxbAkcZQ2ZqUJ66dG9PWINRyIOGZY4T02sTQ8KPY2vroRbF6R\nfnXf5uz1OAMI2qNwDMB7yw8BiDQIskjgci054G6/+9rnmOLa4R3W8kdT2VrL9Sa4\nmeJEjU5Ac5I7JvXKq+Kzw8n8+YTUbzKfWqMrv3cjHXd0Jaju8R6gWcV2NgqtVpBY\nCCtnQT8uVz/bzyL2XlGYo9Iw4tW3bS6mcnxbqxiCTr618mvRIrpf4//CZOv78Lgl\nQwU9MT4xfDogRMKbLUrHInVFSoF0bF/k1fuBw7Tgx1I0PHNRdjWUsuoUWFtj/OG2\n1NgYIc+jAgMBAAECggEAEatUpYudB/LAE3dvBoKwc5qZx2TXN5GxWC8NxFyOPfUP\ncouPlCcXladkFCgKO97/L/O7nCbfpm2b9W76DNygZ7fg0Bkxu1fzHYUaxtGPwJ6E\nEgeCGTKqEC+NgJexrQXedePMqAAjYXI9PC1FwYQ2E9KhYcmiTDzQrEcfl8imfegG\nnL08xaNYOMywt0RLTkO1NdNVhSh9RYfwmLOxElNDg5skF6nW6rHEo60dCdNrkjfJ\ndu0XtFrt6+rCpXH8wKyQEahUTg7QKgpkTigiaV2/QnHmGs3zVS6/VmbShg1lOiBC\npvjMrXuRKHEQcPJQLBQs+rjOXRsIhPUjRGllc4aaQQKBgQDhpwvIC7FmDesrad75\nHb3hjrNCSl8f1QA7gND3FPPvVEgPr4kl9Gspbw72S9alt9mwjIyLvhia5SSRoVa5\nvy/n/uwnon613nSRGOags3vXfL/9cCFDFdxJi0INESAGi1Cjt6VgI+YuojG9J0Un\nO+0Kl2qqZmxEHtYAMBcrcGXWtQKBgQDYW6UjLuP/CCwpeFt9dCacyyJ+F1lYNYuz\nl0muKlHJqN9OaRJxhHNahpk2q1o11O/A8CK1h4mgENM3hxcMsBSE4Mhfcbpwbf0Q\nw6hCEk19oiK/sad0mHQ6sVRk9nIvCpsHFhvg64PdGGCXU64PGmlrHsRS/iMrK53u\n89Muo9pr9wKBgAgZJqMXSFaRSU9VjVsDZj0iEezfHmrWChwYk2dKqTZ9n9hwREvI\nadAi3DaaoilwX6+mW6ToPZnRf256i9I+uklpLLB/dGyyfxx1+FDsIBWrtHgz/f2a\nWz2IceZmJvAVL9+wR48burcRuxc+wYyW6frnVDypUFlhgeyfzTUR45XBAoGASNjC\nh1AYcBweUnA1zc232n8CxBW0fWC6AuPjaQLSuuVjGpGCJjqEZGyBVcjn/MwPVZUE\n+r4B9qTzmPShLCJ1JjBRBuHR9lzyIhzeoDBtaumWbZixWy6ho8llMwFPfMtDW2V0\nSYzCv0Sf8RO5vVgVOn4HeDIdQUHUUUpDRqbgug0CgYB37F0N/H8j2qWEA7IxJGb5\nnXfw+I9Z8QtNcLBbtLK+v7kttM0AtkRUHw43GAof7S/wRL+LnDlVYVzzNAAwEGKf\n6a1yhMzkerNNI8IhgCJBEUKYwDn3CfMDyD6QsJq6DvkiPTOv4+gbb5qRUfgz+66S\n7AQxK4mXbUyh5ldxbpKldA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@parental-intelligence.iam.gserviceaccount.com",
+  "client_id": "105125948349297668518",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40parental-intelligence.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
