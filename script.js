@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const langSelectSi    = document.getElementById('lang-select-si');
   const menuToggle      = document.getElementById('menu-toggle');
   const sidebar         = document.querySelector('.sidebar');
+  const subscribeBtn = document.getElementById('subscribe-btn');
   const db = firebase.firestore();
 
   firebase.auth().onAuthStateChanged(async user => {
