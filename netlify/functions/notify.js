@@ -13,6 +13,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 exports.handler = async (event) => {
+  console.log('🔔 PayHere notify invoked!', event.httpMethod, event.body);
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
