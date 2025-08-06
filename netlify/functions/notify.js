@@ -1,6 +1,16 @@
 // notify.js
 const crypto     = require('crypto');
 const qs         = require('querystring');
+const admin = require('firebase-admin');
+const serviceAccount = require('./firebase-service-account.json');
+
+// Initialize once
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+const db = admin.firestore();
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -35,7 +45,40 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: 'BAD SIGNATURE' };
   }
 
-  // TODO: update your DB based on data.message_type
+  // 3️⃣ Find which user this is for
+  const orderRef = db.collection('subscriptionOrders').doc(data.order_id);
+  const orderSnap = await orderRef.get();
+  if (!orderSnap.exists) {
+    console.error('Unknown order_id:', data.order_id);
+    return { statusCode: 400, body: 'Unknown order' };
+  }
+  const { userId } = orderSnap.data();
+
+  // 4️⃣ Update the user’s subscriptions
+  const subRef = db
+    .collection('users')
+    .doc(userId)
+    .collection('subscriptions')
+    .doc(data.subscription_id);
+
+  if (data.message_type === 'RECURRING_INSTALLMENT_SUCCESS' && data.status_code === '2') {
+    await subRef.set({
+      subscriptionId: data.subscription_id,
+      orderId:        data.order_id,
+      status:         'active',
+      lastPayment:    {
+        id:     data.payment_id,
+        amount: Number(data.payhere_amount)
+      },
+      nextCharge: data.item_rec_date_next,
+      updatedAt:  admin.firestore.FieldValue.serverTimestamp()
+    });
+  } else if (data.message_type === 'RECURRING_STOPPED') {
+    await subRef.update({
+      status:    'canceled',
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+  }
 
   return { statusCode: 200, body: 'OK' };
 };

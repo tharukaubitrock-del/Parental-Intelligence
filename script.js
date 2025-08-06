@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ← NEW: hook up Subscribe
   const subscribeBtn = document.getElementById('subscribe-btn');
   subscribeBtn.addEventListener('click', () => {
-    window.location.href = '/api/payhere/subscribe';
+    window.open('/api/payhere/subscribe', '_blank');
   });
 
   // Language text content
