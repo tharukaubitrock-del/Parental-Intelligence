@@ -62,10 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar.classList.toggle('active');
   };
 
-  // ← NEW: hook up Subscribe
-  const subscribeBtn = document.getElementById('subscribe-btn');
+  // inside your DOMContentLoaded listener, after auth is ready:
   subscribeBtn.addEventListener('click', () => {
-    window.open('/api/payhere/subscribe', '_blank');
+    const user = firebase.auth().currentUser;
+    if (!user) return alert('Please log in first.');
+    // open the subscribe function, passing uid as a query param
+    window.open(`/api/payhere/subscribe?uid=${user.uid}`, '_blank');
   });
 
   // ← NEW: show subscription outcome
