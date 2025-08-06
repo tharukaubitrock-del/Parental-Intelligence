@@ -15,9 +15,9 @@ exports.handler = async (event) => {
   const currency   = 'LKR';
   const recurrence = '1 Month';
   const duration   = 'Forever';
-  const returnUrl  = 'https://your-netlify-site.netlify.app/?status=success';
-  const cancelUrl  = 'https://your-netlify-site.netlify.app/?status=cancel';
-  const notifyUrl  = 'https://your-netlify-site.netlify.app/api/payhere/notify';
+  const returnUrl  = 'https://chatpi.lk/?status=success';
+  const cancelUrl  = 'https://chatpi.lk/?status=cancel';
+  const notifyUrl  = 'https://chatpi.lk/api/payhere/notify';
 
   const secretMd5 = crypto
     .createHash('md5')

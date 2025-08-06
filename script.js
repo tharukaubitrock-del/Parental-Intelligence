@@ -68,6 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
     window.open('/api/payhere/subscribe', '_blank');
   });
 
+  // ← NEW: show subscription outcome
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status');
+  if (status === 'success') {
+    alert('🎉 Subscription activated!');
+  } else if (status === 'cancel') {
+    alert('⚠️ Subscription was canceled.');
+  }
+
   // Language text content
   const TEXTS = {
     en: {
