@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const API_KEY = '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';
+  const API_KEY = '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';
 
   let parentName   = '';
   let childStage   = '';
