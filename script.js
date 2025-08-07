@@ -65,9 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // inside your DOMContentLoaded listener, after auth is ready:
   subscribeBtn.addEventListener('click', () => {
     const user = firebase.auth().currentUser;
-    if (!user) return alert('Please log in first.');
-    // open the subscribe function, passing uid as a query param
-    window.open(`/api/payhere/subscribe`, '_blank');
+    if (!user) return alert('Login first');
+    window.open(`/api/payhere/subscribe?uid=${user.uid}`, '_blank');
   });
 
   // ← NEW: show subscription outcome
