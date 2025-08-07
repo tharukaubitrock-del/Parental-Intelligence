@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  require('dotenv').config();
   
   const API_KEY = process.env.OPENROUTER_KEY;
 
