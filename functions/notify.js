@@ -2,10 +2,12 @@
 require('dotenv').config();
 const crypto     = require('crypto');
 const qs         = require('querystring');
-const admin = require('firebase-admin');
+const admin      = require('firebase-admin');
+
+// Parse the service account JSON from env
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-// Initialize once
+// Initialize Firebase Admin once
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -15,22 +17,22 @@ const db = admin.firestore();
 
 exports.handler = async (event) => {
   console.log('🔔 PayHere notify invoked!', event.httpMethod, event.body);
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  // Parse form-encoded body
+  // Parse form-encoded payload
   const data = qs.parse(event.body);
 
+  // Validate MD5 signature
   const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
-  const secretMd5 = crypto
-    .createHash('md5')
+  const secretMd5 = crypto.createHash('md5')
     .update(MERCHANT_SECRET)
     .digest('hex')
     .toUpperCase();
 
-  const localMd5sig = crypto
-    .createHash('md5')
+  const localMd5sig = crypto.createHash('md5')
     .update(
       data.merchant_id +
       data.order_id +
@@ -47,23 +49,23 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: 'BAD SIGNATURE' };
   }
 
-  // 3️⃣ Find which user this is for
-  const orderRef = db.collection('subscriptionOrders').doc(data.order_id);
-  const orderSnap = await orderRef.get();
+  // Lookup order to find associated user
+  const orderSnap = await db.collection('subscriptionOrders')
+    .doc(data.order_id)
+    .get();
   if (!orderSnap.exists) {
     console.error('Unknown order_id:', data.order_id);
     return { statusCode: 400, body: 'Unknown order' };
   }
   const { userId } = orderSnap.data();
 
-  // 4️⃣ Update the user’s subscriptions
-  const subRef = db
-    .collection('users')
-    .doc(userId)
-    .collection('subscriptions')
-    .doc(data.subscription_id);
+  // References
+  const userRef = db.collection('users').doc(userId);
+  const subRef  = userRef.collection('subscriptions').doc(data.subscription_id);
 
+  // Handle events
   if (data.message_type === 'RECURRING_INSTALLMENT_SUCCESS' && data.status_code === '2') {
+    // Mark subscription active in subcollection
     await subRef.set({
       subscriptionId: data.subscription_id,
       orderId:        data.order_id,
@@ -75,12 +77,26 @@ exports.handler = async (event) => {
       nextCharge: data.item_rec_date_next,
       updatedAt:  admin.firestore.FieldValue.serverTimestamp()
     });
+    // Mark user as subscriber in main user doc
+    await userRef.update({
+      isSubscriber:   true,
+      subscriptionId: data.subscription_id,
+      subscribedAt:   admin.firestore.FieldValue.serverTimestamp()
+    });
+
   } else if (data.message_type === 'RECURRING_STOPPED') {
+    // Mark subscription canceled in subcollection
     await subRef.update({
       status:    'canceled',
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
+    // Mark user unsubscribed
+    await userRef.update({
+      isSubscriber:   false,
+      unsubscribedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
   }
 
+  // Acknowledge receipt to PayHere
   return { statusCode: 200, body: 'OK' };
 };
