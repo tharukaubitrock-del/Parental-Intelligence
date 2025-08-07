@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   
-  const API_KEY = process.env.OPENROUTER_KEY;
-
   let parentName   = '';
   let childStage   = '';
   let userLang     = 'en';
@@ -344,27 +342,19 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
   
     // 3️⃣ Call OpenRouter
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const res = await fetch('/.netlify/functions/chat', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.0-flash-001',
-        messages,
-        max_tokens: 2500,
-        temperature: 0.2,
-        top_p: 0.9,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        repetition_penalty: 1.1
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages })
     });
-  
-    if (!res.ok) throw new Error(res.statusText);
-    const d = await res.json();
-    return d.choices[0].message.content.trim();
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Chat API Error ${res.status}: ${errText}`);
+    }
+    const data = await res.json();
+    return JSON.parse(data).choices
+      ? JSON.parse(data).choices[0].message.content.trim()
+      : JSON.parse(data).reply;
   }
 
   sendBtn.onclick = async () => {
