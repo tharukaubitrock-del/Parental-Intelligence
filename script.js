@@ -341,20 +341,18 @@ document.addEventListener('DOMContentLoaded', () => {
       { role: 'user', content: prompt }
     ];
   
-    // 3️⃣ Call OpenRouter
-    const res = await fetch('/.netlify/functions/chat', {
+    // Proxy through Netlify Function
+    const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages })
     });
     if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Chat API Error ${res.status}: ${errText}`);
+      const text = await res.text();
+      throw new Error(`Chat error ${res.status}: ${text}`);
     }
-    const data = await res.json();
-    return JSON.parse(data).choices
-      ? JSON.parse(data).choices[0].message.content.trim()
-      : JSON.parse(data).reply;
+    const { reply } = await res.json();
+    return reply;
   }
 
   sendBtn.onclick = async () => {

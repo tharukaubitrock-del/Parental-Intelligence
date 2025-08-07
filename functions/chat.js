@@ -26,10 +26,30 @@ exports.handler = async (event) => {
       })
     });
 
-    const body = await openRes.text();
-    return { statusCode: openRes.status, body };
+
+    if (!openRes.ok) {
+      const errorText = await openRes.text();
+      return {
+        statusCode: openRes.status,
+        headers: { 'Content-Type': 'text/plain' },
+        body: errorText
+      };
+    }
+
+    const data = await openRes.json();
+    const reply = data.choices[0]?.message?.content?.trim() || '';
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reply })
+    };
   } catch (err) {
     console.error('Chat function error:', err);
-    return { statusCode: 500, body: 'Internal Server Error' };
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Internal Server Error'
+    };
   }
 };
