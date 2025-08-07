@@ -1,8 +1,9 @@
 // notify.js
+require('dotenv').config();
 const crypto     = require('crypto');
 const qs         = require('querystring');
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebase-service.json');
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 // Initialize once
 if (!admin.apps.length) {
@@ -21,7 +22,7 @@ exports.handler = async (event) => {
   // Parse form-encoded body
   const data = qs.parse(event.body);
 
-  const MERCHANT_SECRET = 'Mjg1NDk0NDk0NzI0NTYzMjQ3MjcyOTAyMjExNTc0MzI4OTcxNzgyNA==';
+  const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
   const secretMd5 = crypto
     .createHash('md5')
     .update(MERCHANT_SECRET)

@@ -1,4 +1,5 @@
 // subscribe.js
+require('dotenv').config();
 const crypto = require('crypto');
 
 exports.handler = async (event) => {
@@ -6,8 +7,8 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const MERCHANT_ID     = '1231286';
-  const MERCHANT_SECRET = 'Mjg1NDk0NDk0NzI0NTYzMjQ3MjcyOTAyMjExNTc0MzI4OTcxNzgyNA==';
+  const MERCHANT_ID     = process.env.PAYHERE_MERCHANT_ID;
+  const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
 
   // Build order, hash, etc.
   const orderId    = `sub_${Date.now()}`;

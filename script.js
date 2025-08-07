@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const API_KEY = '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';
+  require('dotenv').config();
+  
+  const API_KEY = process.env.OPENROUTER_KEY;
 
   let parentName   = '';
   let childStage   = '';
