@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   subscribeBtn.addEventListener('click', () => {
     const user = firebase.auth().currentUser;
     if (!user) return alert('Please log in first.');
-    window.open(`/api/payhere/subscribe?uid=${user.uid}`, '_blank');
+    window.open(`/api/payhere/subscribe?uid=${firebase.auth().currentUser.uid}`, '_blank');
   });
 
   // ← NEW: show subscription outcome

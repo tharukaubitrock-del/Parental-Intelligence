@@ -3,14 +3,27 @@ require('dotenv').config();
 const crypto = require('crypto');
 const admin  = require('firebase-admin');
 
-// --- service account newline fix ---
 function loadServiceAccount() {
-  const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT missing');
+
+  // If whole JSON was accidentally wrapped in quotes, strip them
+  if (raw.startsWith('"') && raw.endsWith('"')) {
+    raw = raw.slice(1, -1);
+  }
+  // If quotes inside were escaped, unescape once
+  raw = raw.replace(/\\"/g, '"');
+
+  const sa = JSON.parse(raw);
+
+  // Turn literal \\n into real newlines for the PEM
   if (sa.private_key && sa.private_key.includes('\\n')) {
     sa.private_key = sa.private_key.replace(/\\n/g, '\n');
   }
   return sa;
 }
+
+
 if (!admin.apps.length) {
   admin.initializeApp({ credential: admin.credential.cert(loadServiceAccount()) });
 }

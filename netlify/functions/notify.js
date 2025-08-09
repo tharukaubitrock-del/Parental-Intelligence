@@ -4,10 +4,16 @@ const crypto     = require('crypto');
 const qs         = require('querystring');
 const admin = require('firebase-admin');
 
+// Robust loader for JSON in env (with \\n)
 function loadServiceAccount() {
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT; // JSON string in env
-  const sa  = JSON.parse(raw);
-  // Convert escaped newlines into real newlines
+  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT missing');
+
+  // strip accidental outer quotes and unescape inner quotes once
+  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+  raw = raw.replace(/\\"/g, '"');
+
+  const sa = JSON.parse(raw);
   if (sa.private_key && sa.private_key.includes('\\n')) {
     sa.private_key = sa.private_key.replace(/\\n/g, '\n');
   }
