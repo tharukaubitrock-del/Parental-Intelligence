@@ -1,104 +1,100 @@
-// notify.js
+// netlify/functions/notify.js
 require('dotenv').config();
-const crypto     = require('crypto');
-const qs         = require('querystring');
-const admin = require('firebase-admin');
+const crypto = require('crypto');
+const qs     = require('querystring');
+const admin  = require('firebase-admin');
 
+// ---- service account (supports BASE64 or JSON-with-\\n) ----
 function loadSA() {
   const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
-  if (!b64) throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_BASE64');
-  const json = Buffer.from(b64, 'base64').toString('utf8');
-  return JSON.parse(json);
+  if (b64) {
+    return JSON.parse(Buffer.from(b64, 'base64').toString('utf8'));
+  }
+  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) throw new Error('Missing Firebase service account env');
+  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+  raw = raw.replace(/\\"/g, '"');
+  const sa = JSON.parse(raw);
+  if (sa.private_key?.includes('\\n')) sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+  return sa;
 }
 
 if (!admin.apps.length) {
   admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
 }
-
 const db = admin.firestore();
 
 exports.handler = async (event) => {
-  console.log('🔔 PayHere notify invoked!', event.httpMethod, event.body);
+  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+  const data = qs.parse(event.body || '');
 
-  // Parse form-encoded payload
-  const data = qs.parse(event.body);
+  // Log every webhook (handy while testing)
+  try {
+    await db.collection('payhereWebhookLog')
+      .doc(`${data.order_id || 'noorder'}_${Date.now()}`)
+      .set({ receivedAt: admin.firestore.FieldValue.serverTimestamp(), data });
+  } catch (_) {}
 
-  // Validate MD5 signature
-  const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
+  // --- Verify MD5 ---
   const secretMd5 = crypto.createHash('md5')
-    .update(MERCHANT_SECRET)
-    .digest('hex')
-    .toUpperCase();
-
+    .update(process.env.PAYHERE_MERCHANT_SECRET)
+    .digest('hex').toUpperCase();
   const localMd5sig = crypto.createHash('md5')
     .update(
-      data.merchant_id +
-      data.order_id +
-      data.payhere_amount +
-      data.payhere_currency +
-      data.status_code +
+      (data.merchant_id || '') +
+      (data.order_id || '') +
+      (data.payhere_amount || '') +
+      (data.payhere_currency || '') +
+      (data.status_code || '') +
       secretMd5
     )
-    .digest('hex')
-    .toUpperCase();
+    .digest('hex').toUpperCase();
 
   if (localMd5sig !== data.md5sig) {
-    console.error('Signature mismatch', data);
+    console.error('BAD SIGNATURE', { got: data.md5sig, exp: localMd5sig, order: data.order_id });
     return { statusCode: 400, body: 'BAD SIGNATURE' };
   }
 
-  // Lookup order to find associated user
-  const orderSnap = await db.collection('subscriptionOrders')
-    .doc(data.order_id)
-    .get();
-  if (!orderSnap.exists) {
-    console.error('Unknown order_id:', data.order_id);
+  // --- Find userId (order mapping first, then custom_1 fallback) ---
+  let userId = null;
+  try {
+    const snap = await db.collection('subscriptionOrders').doc(data.order_id).get();
+    if (snap.exists) userId = snap.data().userId;
+  } catch (_) {}
+  if (!userId && data.custom_1) userId = data.custom_1;
+  if (!userId) {
+    console.error('Unknown order/user for', data.order_id);
     return { statusCode: 400, body: 'Unknown order' };
   }
-  const { userId } = orderSnap.data();
 
-  // References
   const userRef = db.collection('users').doc(userId);
-  const subRef  = userRef.collection('subscriptions').doc(data.subscription_id);
+  // Some IPNs don’t include subscription_id; fall back to order_id
+  const subDocId = data.subscription_id || data.order_id || 'unknown';
+  const subRef   = userRef.collection('subscriptions').doc(subDocId);
 
-  // Handle events
-  if (data.message_type === 'RECURRING_INSTALLMENT_SUCCESS' && data.status_code === '2') {
-    // Mark subscription active in subcollection
+  // --- Treat any status_code === '2' as a successful charge ---
+  if (data.status_code === '2') {
     await subRef.set({
-      subscriptionId: data.subscription_id,
+      subscriptionId: data.subscription_id || null,
       orderId:        data.order_id,
       status:         'active',
-      lastPayment:    {
-        id:     data.payment_id,
-        amount: Number(data.payhere_amount)
-      },
-      nextCharge: data.item_rec_date_next,
-      updatedAt:  admin.firestore.FieldValue.serverTimestamp()
-    });
-    // Mark user as subscriber in main user doc
-    await userRef.update({
+      lastPayment:    { id: data.payment_id, amount: Number(data.payhere_amount) || 0 },
+      nextCharge:     data.item_rec_date_next || null,
+      method:         data.method || null,
+      updatedAt:      admin.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+
+    await userRef.set({
       isSubscriber:   true,
-      subscriptionId: data.subscription_id,
+      subscriptionId: data.subscription_id || null,
       subscribedAt:   admin.firestore.FieldValue.serverTimestamp()
-    });
+    }, { merge: true });
 
   } else if (data.message_type === 'RECURRING_STOPPED') {
-    // Mark subscription canceled in subcollection
-    await subRef.update({
-      status:    'canceled',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
-    // Mark user unsubscribed
-    await userRef.update({
-      isSubscriber:   false,
-      unsubscribedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
+    await subRef.set({ status: 'canceled', updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    await userRef.set({ isSubscriber: false, unsubscribedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
   }
 
-  // Acknowledge receipt to PayHere
   return { statusCode: 200, body: 'OK' };
 };
