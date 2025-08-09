@@ -4,29 +4,17 @@ const crypto     = require('crypto');
 const qs         = require('querystring');
 const admin = require('firebase-admin');
 
-// Robust loader for JSON in env (with \\n)
-function loadServiceAccount() {
-  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT missing');
-
-  // strip accidental outer quotes and unescape inner quotes once
-  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
-  raw = raw.replace(/\\"/g, '"');
-
-  const sa = JSON.parse(raw);
-  if (sa.private_key && sa.private_key.includes('\\n')) {
-    sa.private_key = sa.private_key.replace(/\\n/g, '\n');
-  }
-  return sa;
+function loadSA() {
+  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  if (!b64) throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_BASE64');
+  const json = Buffer.from(b64, 'base64').toString('utf8');
+  return JSON.parse(json);
 }
-
-const serviceAccount = loadServiceAccount();
 
 if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+  admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
 }
+
 const db = admin.firestore();
 
 exports.handler = async (event) => {

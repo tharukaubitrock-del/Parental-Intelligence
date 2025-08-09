@@ -3,29 +3,15 @@ require('dotenv').config();
 const crypto = require('crypto');
 const admin  = require('firebase-admin');
 
-function loadServiceAccount() {
-  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!raw) throw new Error('FIREBASE_SERVICE_ACCOUNT missing');
-
-  // If whole JSON was accidentally wrapped in quotes, strip them
-  if (raw.startsWith('"') && raw.endsWith('"')) {
-    raw = raw.slice(1, -1);
-  }
-  // If quotes inside were escaped, unescape once
-  raw = raw.replace(/\\"/g, '"');
-
-  const sa = JSON.parse(raw);
-
-  // Turn literal \\n into real newlines for the PEM
-  if (sa.private_key && sa.private_key.includes('\\n')) {
-    sa.private_key = sa.private_key.replace(/\\n/g, '\n');
-  }
-  return sa;
+function loadSA() {
+  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  if (!b64) throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_BASE64');
+  const json = Buffer.from(b64, 'base64').toString('utf8');
+  return JSON.parse(json);
 }
 
-
 if (!admin.apps.length) {
-  admin.initializeApp({ credential: admin.credential.cert(loadServiceAccount()) });
+  admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
 }
 const db = admin.firestore();
 
