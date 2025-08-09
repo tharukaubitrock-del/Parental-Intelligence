@@ -3,10 +3,23 @@ require('dotenv').config();
 const crypto = require('crypto');
 const admin  = require('firebase-admin');
 
-// init firebase admin
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+function loadServiceAccount() {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT; // JSON string in env
+  const sa  = JSON.parse(raw);
+  // Convert escaped newlines into real newlines
+  if (sa.private_key && sa.private_key.includes('\\n')) {
+    sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+  }
+  return sa;
+}
+
+const serviceAccount = loadServiceAccount();
+
 if (!admin.apps.length) {
-  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
 }
 const db = admin.firestore();
 
