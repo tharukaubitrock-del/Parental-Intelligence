@@ -1,17 +1,40 @@
-// subscribe.js
+// netlify/functions/subscribe.js
 require('dotenv').config();
 const crypto = require('crypto');
+const admin  = require('firebase-admin');
+
+// init firebase admin
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+if (!admin.apps.length) {
+  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+}
+const db = admin.firestore();
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
+  // 1) get user id from query
+  const userId = event.queryStringParameters?.uid;
+  if (!userId) return { statusCode: 400, body: 'Missing user ID' };
+
+  // 2) build orderId
+  const orderId = `sub_${userId}_${Date.now()}`;
+
+  // 🔽🔽 PUT IT RIGHT HERE 🔽🔽
+  await db
+    .collection('subscriptionOrders')
+    .doc(orderId)
+    .set({
+      userId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+  // 🔼🔼 BEFORE computing hash / returning the form 🔼🔼
   const MERCHANT_ID     = process.env.PAYHERE_MERCHANT_ID;
   const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
 
   // Build order, hash, etc.
-  const orderId    = `sub_${Date.now()}`;
   const amount     = 1000.00;
   const currency   = 'LKR';
   const recurrence = '1 Month';
