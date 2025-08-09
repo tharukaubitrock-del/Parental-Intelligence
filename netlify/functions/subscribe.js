@@ -73,7 +73,7 @@ exports.handler = async (event) => {
     statusCode: 200,
     headers: { 'Content-Type': 'text/html' },
     body: `<!DOCTYPE html><html><body>
-      <form id="payhere" method="POST" action="https://sandbox.payhere.lk/pay/checkout">
+      <form id="payhere" method="POST" action="https://sandbox.payhere.lk/pay/o8b4bd664">
         <input type="hidden" name="merchant_id" value="${MERCHANT_ID}">
         <input type="hidden" name="return_url"  value="${returnUrl}">
         <input type="hidden" name="cancel_url"  value="${cancelUrl}">
