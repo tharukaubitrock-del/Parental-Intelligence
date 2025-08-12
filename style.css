@@ -905,3 +905,63 @@ body.initializing .overlay,
 body.initializing .dashboard {
   display: none !important;
 }
+
+/* Lock page scroll when modal is open */
+body.no-scroll { overflow: hidden; }
+
+/* Fullscreen modal container (hidden by default) */
+.plan-modal { position: fixed; inset: 0; z-index: 2000; display: none; }
+.plan-modal.open { display: block; }
+
+/* Backdrop covers entire page */
+.plan-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.65); }
+
+/* Fullscreen content shell */
+.plan-modal__content {
+  position: relative;
+  width: 100vw; height: 100vh;           /* FULL PAGE */
+  background: #0f1115; color: #e8e8ea;
+  display: flex; flex-direction: column;
+  padding: 28px clamp(16px, 3vw, 32px);
+}
+
+/* Close (X) */
+.plan-modal__close {
+  position: absolute; top: 14px; right: 16px;
+  background: transparent; border: 0; color: #aab1bd;
+  font-size: 28px; cursor: pointer; line-height: 1;
+}
+
+/* Title */
+.plan-modal__title { margin: 6px 0 18px; font-size: 22px; font-weight: 700; }
+
+/* Plans grid fills available space and scrolls if needed */
+.plans {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  overflow: auto; padding-right: 6px; flex: 1;
+}
+@media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+
+/* Cards */
+.plan {
+  background: #151823; border: 1px solid #222635; border-radius: 14px; padding: 18px;
+}
+.plan--highlight { border-color: #5b6bff; position: relative; }
+.plan-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  background: #2b35ff; color: #fff;
+}
+.plan-name  { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.plan-price { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.plan-features { list-style: none; padding: 0; margin: 0 0 14px; color: #c9cbd4; }
+.plan-features li { margin: 6px 0; }
+
+/* Buttons */
+.btn { width: 100%; border: 0; border-radius: 10px; padding: 10px 14px;
+  font-weight: 700; cursor: pointer; background: #2a2f42; color: #e8e8ea; }
+.btn-primary { background: #5b6bff; }
+.btn.disabled, .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.fineprint { margin-top: 14px; color: #aeb3bd; font-size: 12px; }
+.fineprint a { color: #cdd2ff; }

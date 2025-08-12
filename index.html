@@ -201,5 +201,42 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="script.js"></script>
   <script src="https://www.payhere.lk/lib/payhere.js"></script>
+
+  <!-- Upgrade / Pricing Modal (FULLSCREEN) -->
+  <div id="plan-modal" class="plan-modal" aria-hidden="true" role="dialog">
+    <div class="plan-modal__backdrop" data-close-modal></div>
+
+    <div class="plan-modal__content" role="document" aria-modal="true">
+      <button class="plan-modal__close" aria-label="Close" data-close-modal>×</button>
+
+      <h2 class="plan-modal__title">Upgrade your plan</h2>
+
+      <div class="plans">
+        <div class="plan">
+          <div class="plan-name">Free</div>
+          <div class="plan-price">Rs. 0</div>
+          <ul class="plan-features">
+            <li>Basic access</li><li>Limited messages</li><li>Standard responses</li>
+          </ul>
+          <button class="btn disabled" disabled>Your current plan</button>
+        </div>
+
+        <div class="plan plan--highlight">
+          <div class="plan-badge">POPULAR</div>
+          <div class="plan-name">PI Plus</div>
+          <div class="plan-price">Rs. 1,000 / month</div>
+          <ul class="plan-features">
+            <li>Priority responses</li><li>Longer chats</li><li>Early features</li>
+          </ul>
+          <button id="get-plus-btn" class="btn btn-primary">Get PI Plus</button>
+        </div>
+      </div>
+
+      <p class="fineprint">
+        By continuing you agree to our <a href="/terms.html" target="_blank">Terms</a>.
+      </p>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle      = document.getElementById('menu-toggle');
   const sidebar         = document.querySelector('.sidebar');
   const subscribeBtn = document.getElementById('subscribe-btn');
+  const planModal    = document.getElementById('plan-modal');
+  const getPlusBtn   = document.getElementById('get-plus-btn');
   const db = firebase.firestore();
 
   firebase.auth().onAuthStateChanged(async user => {
@@ -62,12 +64,47 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar.classList.toggle('active');
   };
 
-  // inside your DOMContentLoaded listener, after auth is ready:
-  subscribeBtn.addEventListener('click', () => {
-    const user = firebase.auth().currentUser;
-    if (!user) return alert('Please log in first.');
-    window.open(`/api/payhere/subscribe?uid=${firebase.auth().currentUser.uid}`, '_blank');
+
+  // Helpers
+  function openPlanModal() {
+    planModal.classList.add('open');
+    document.body.classList.add('no-scroll');   // hide chat scroll behind
+  }
+  function closePlanModal() {
+    planModal.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+  }
+
+  // Open modal from sidebar button
+  subscribeBtn?.addEventListener('click', openPlanModal);
+
+  // Close with X or backdrop
+  planModal?.addEventListener('click', (e) => {
+    if (e.target.matches('[data-close-modal], .plan-modal__backdrop')) {
+      closePlanModal();
+    }
   });
+
+  // Close with ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && planModal?.classList.contains('open')) {
+      closePlanModal();
+    }
+  });
+
+  // Proceed to PayHere on "Get PI Plus"
+  getPlusBtn?.addEventListener('click', () => {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+      alert('Please log in first.');
+      return;
+    }
+    getPlusBtn.disabled = true;
+    window.open(`/api/payhere/subscribe?uid=${user.uid}`, '_blank');
+    closePlanModal();
+    setTimeout(() => (getPlusBtn.disabled = false), 1200);
+  });
+
 
   // ← NEW: show subscription outcome
   const params = new URLSearchParams(window.location.search);
@@ -500,3 +537,5 @@ document.getElementById('maslogout-btn').onclick = () => {
     location.reload(); // or redirect to login page
   });
 };
+
+
