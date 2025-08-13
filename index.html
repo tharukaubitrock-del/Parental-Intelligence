@@ -96,7 +96,7 @@
     </aside>
 
     <div class="main-panel">
-      <header>
+      <header class = "app-header">
         <!-- In header -->
         <button id="menu-toggle" class="hamburger">&#9776;</button>
         <h1 id="app-title">PI</h1>
@@ -225,37 +225,109 @@
   <!-- Upgrade / Pricing Modal (FULLSCREEN) -->
   <div id="plan-modal" class="plan-modal" aria-hidden="true" role="dialog">
     <div class="plan-modal__backdrop" data-close-modal></div>
-
-    <div class="plan-modal__content" role="document" aria-modal="true">
+  
+    <div class="plan-modal__content plan-modal--light" role="document" aria-modal="true">
       <button class="plan-modal__close" aria-label="Close" data-close-modal>×</button>
-
-      <h2 class="plan-modal__title">Upgrade your plan</h2>
-
-      <div class="plans">
-        <div class="plan">
-          <div class="plan-name">Free</div>
-          <div class="plan-price">Rs. 0</div>
-          <ul class="plan-features">
-            <li>Basic access</li><li>Limited messages</li><li>Standard responses</li>
+  
+      <h2 class="plan-heading">Upgrade your plan</h2>
+  
+      <div class="plans plans--two">
+  
+        <!-- Free (light blue) -->
+        <article class="plan plan--free">
+          <header class="plan__header">
+            <div class="plan__title-row">
+              <h3 class="plan__title">Free</h3>
+            </div>
+  
+            <div class="plan__price">
+              <span class="price__currency">Rs.</span>
+              <span class="price__amount">0</span>
+              <span class="price__period">/month</span>
+            </div>
+  
+            <p class="plan__hook">Guidance for everyday parenting</p>
+  
+            <button class="btn btn-compact btn-outline" disabled>Your current plan</button>
+          </header>
+  
+          <ul class="plan__features">
+            <li><svg class="i"><use href="#i-spark"/></svg> Access to PI</li>
+            <li><svg class="i"><use href="#i-msg"/></svg> 10 messages / day</li>
+            <li><svg class="i"><use href="#i-speed"/></svg> Standard response speed</li>
+            <li><svg class="i"><use href="#i-memory"/></svg> Basic memory & context</li>
           </ul>
-          <button class="btn disabled" disabled>Your current plan</button>
-        </div>
-
-        <div class="plan plan--highlight">
-          <div class="plan-badge">POPULAR</div>
-          <div class="plan-name">PI Plus</div>
-          <div class="plan-price">Rs. 1,000 / month</div>
-          <ul class="plan-features">
-            <li>Priority responses</li><li>Longer chats</li><li>Early features</li>
+        </article>
+  
+        <!-- PI+ (dark blue, highlighted) -->
+        <article class="plan plan--plus plan--highlight">
+          <header class="plan__header">
+            <div class="plan__title-row">
+              <h3 class="plan__title">PI+</h3>
+              <span class="plan-badge">POPULAR</span>
+            </div>
+  
+            <div class="plan__price">
+              <span class="price__currency">Rs.</span>
+              <span class="price__amount">499</span>
+              <span class="price__period">/month</span>
+            </div>
+  
+            <p class="plan__hook">Go unlimited for nonstop support</p>
+  
+            <button id="get-plus-btn" class="btn btn-compact btn-primary">Get PI+</button>
+          </header>
+  
+          <ul class="plan__features">
+            <li><svg class="i"><use href="#i-boost"/></svg> Priority responses</li>
+            <li><svg class="i"><use href="#i-infinity"/></svg> Unlimited messages</li>
+            <li><svg class="i"><use href="#i-rocket"/></svg> Faster, richer answers</li>
+            <li><svg class="i"><use href="#i-lab"/></svg> Early features & experiments</li>
+            <li><svg class="i"><use href="#i-mail"/></svg> Email support</li>
           </ul>
-          <button id="get-plus-btn" class="btn btn-primary">Get PI Plus</button>
-        </div>
+        </article>
+  
       </div>
-
+  
       <p class="fineprint">
-        By continuing you agree to our <a href="/terms.html" target="_blank">Terms</a>.
+        By continuing you agree to our <a href="/terms.html" target="_blank" rel="noopener">Terms</a>.
       </p>
     </div>
+  
+    <!-- icon sprite (keeps your previous icons) -->
+    <svg width="0" height="0" style="position:absolute">
+      <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/>
+      </symbol>
+      <symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+      </symbol>
+      <symbol id="i-speed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-18 0"/>
+        <path d="M12 12l6-3"/>
+      </symbol>
+      <symbol id="i-memory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="7" width="18" height="10" rx="2"/>
+        <path d="M7 7V5m4 2V5m4 2V5m-8 12v2m4-2v2m4-2v2"/>
+      </symbol>
+      <symbol id="i-boost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/>
+      </symbol>
+      <symbol id="i-infinity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18.5 16c-2.5 0-4.5-4-6.5-4s-4 4-6.5 4S2 13.8 2 12s1.5-4 3.5-4c2.5 0 4.5 4 6.5 4s4-4 6.5-4S22 10.2 22 12s-1.5 4-3.5 4z"/>
+      </symbol>
+      <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 13l6 6M3 21l3-3M14 3l7 7-8 8-7-7z"/>
+        <circle cx="17" cy="7" r="1.6"/>
+      </symbol>
+      <symbol id="i-lab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2h12M9 2v6l-6 10a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-6-10V2"/>
+      </symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16v12H4z"/>
+        <path d="M4 8l8 5 8-5"/>
+      </symbol>
+    </svg>
   </div>
 
   <!-- Daily limit toast -->
