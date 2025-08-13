@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', () => {
       typing.remove();
   
       // Handle daily-limit from getAIResponse
-      if (err?.message === 'DAILY_LIMIT' || err?.status === 429) {
+      if (err?.code === 'DAILY_LIMIT') {
         lockChatForToday();       // sets isDailyLocked = true + shows popup (do NOT permanently disable inputs inside this)
         return;
       }
