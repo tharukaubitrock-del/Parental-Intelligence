@@ -76,11 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function watchSubscription(uid) {
-      db.collection('users').doc(uid).onSnapshot((snap) => {
-        const data = snap.data() || {};
+      if (unsubUserDoc) { unsubUserDoc(); unsubUserDoc = null; }
+      unsubUserDoc = db.collection('users').doc(uid).onSnapshot((snap) => {
+        const data  = snap.data() || {};
         const isSub = !!data.isSubscriber;
-        if (isSub) renderPlus();
-        else renderFree();
+        if (isSub) renderPlus(); else renderFree();
       });
     }
 
@@ -161,35 +161,45 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('no-scroll');
   }
 
-  function showLimitToast() {
-    let t = document.getElementById('limit-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'limit-toast';
-      t.setAttribute('role', 'alertdialog');
-      t.setAttribute('aria-live', 'assertive');
-      t.innerHTML = `
-        <div class="toast-text">
-          You’ve reached your 10-message daily limit on the free plan.
-          Upgrade to <b>PI+</b> for unlimited messages, or try again tomorrow.
-        </div>
-        <button class="toast-cta" id="toast-upgrade">Get PI+</button>
-        <button class="toast-close" id="toast-close" aria-label="Close">×</button>
-      `;
-      document.body.appendChild(t);
   
-      // wiring
-      document.getElementById('toast-close').onclick = hideLimitToast;
-      document.getElementById('toast-upgrade').onclick = () => {
+  function wireToastHandlers() {
+    const t = document.getElementById('limit-toast');
+    if (!t) return;
+    const closeBtn   = t.querySelector('#toast-close');
+    const upgradeBtn = t.querySelector('#toast-upgrade');
+  
+    // Avoid stacking multiple listeners by assigning directly
+    if (closeBtn) {
+      closeBtn.onclick = hideLimitToast;
+    }
+    if (upgradeBtn) {
+      upgradeBtn.onclick = () => {
         hideLimitToast();
         if (typeof openPlanModal === 'function') openPlanModal();
       };
     }
+  }
   
+  function showLimitToast() {
+    const t = document.getElementById('limit-toast');
+    if (!t) return;
+    wireToastHandlers();                // <-- always (re)bind
     t.classList.add('open');
     clearTimeout(window.__limitToastTimer);
     window.__limitToastTimer = setTimeout(hideLimitToast, 10000);
   }
+  
+  function hideLimitToast() {
+    const t = document.getElementById('limit-toast');
+    if (!t) return;
+    t.style.animation = 'toast-out .18s ease-in forwards';
+    setTimeout(() => {
+      t.classList.remove('open');
+      t.style.animation = '';
+    }, 180);
+  }
+  
+  wireToastHandlers();
   
   function hideLimitToast() {
     const t = document.getElementById('limit-toast');
@@ -222,8 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function lockChatForToday() {
 
     isDailyLocked = true; 
-
-    // upsell
+    setDailyLockUntilMidnight();
     showLimitToast();
 
     // keep input usable (don’t disable)
