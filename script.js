@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar.classList.toggle('active');
   };
 
-
   // Helpers
   function openPlanModal() {
     planModal.classList.add('open');
@@ -74,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     planModal.classList.remove('open');
     document.body.classList.remove('no-scroll');
   }
-
+  
   // Open modal from sidebar button
   subscribeBtn?.addEventListener('click', openPlanModal);
 
@@ -104,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     closePlanModal();
     setTimeout(() => (getPlusBtn.disabled = false), 1200);
   });
-
 
   // ← NEW: show subscription outcome
   const params = new URLSearchParams(window.location.search);

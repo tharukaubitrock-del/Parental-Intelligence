@@ -3,7 +3,7 @@ require('dotenv').config();
 const crypto = require('crypto');
 const admin  = require('firebase-admin');
 
-// --- service account (base64) ---
+// Service account from Netlify env (base64 JSON)
 function loadSA() {
   const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
   if (!b64) throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_BASE64');
@@ -19,34 +19,38 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
+  // who is subscribing (from client)
   const userId = event.queryStringParameters?.uid;
-  const debug  = event.queryStringParameters?.debug === '1';
   if (!userId) return { statusCode: 400, body: 'Missing uid' };
 
-  // 1) Map order -> user for notify
+  // map order -> user so notify can find them
   const orderId = `sub_${userId}_${Date.now()}`;
   await db.collection('subscriptionOrders').doc(orderId).set({
     userId,
     createdAt: admin.firestore.FieldValue.serverTimestamp()
   });
 
-  // 2) PayHere fields
+  // PayHere fields
   const MERCHANT_ID     = process.env.PAYHERE_MERCHANT_ID;
   const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
-  const amount   = (1000.00).toFixed(2);
-  const currency = 'LKR';
 
-  const returnUrl = 'https://chatpi.lk/?status=success';
-  const cancelUrl = 'https://chatpi.lk/?status=cancel';
-  const notifyUrl = 'https://chatpi.lk/api/payhere/notify';
+  const amount     = (1000.00).toFixed(2); // string with 2dp
+  const currency   = 'LKR';
+  const recurrence = '1 Month';
+  const duration   = 'Forever';
 
-  // 3) Compute hash exactly per spec
-  const secretMd5 = crypto.createHash('md5').update(MERCHANT_SECRET).digest('hex').toUpperCase();
+  const returnUrl  = 'https://chatpi.lk/?status=success';
+  const cancelUrl  = 'https://chatpi.lk/?status=cancel';
+  const notifyUrl  = 'https://chatpi.lk/api/payhere/notify';
+
+  // hash = UPPER(md5(merchant_id + order_id + amount + currency + UPPER(md5(secret))))
+  const secretMd5 = crypto.createHash('md5')
+    .update(MERCHANT_SECRET).digest('hex').toUpperCase();
   const hash = crypto.createHash('md5')
     .update(MERCHANT_ID + orderId + amount + currency + secretMd5)
     .digest('hex').toUpperCase();
 
-  // (optional) prefill customer
+  // (optional) prefill customer details from Firestore
   let firstName='', lastName='', email='', phone='', address='', city='', country='Sri Lanka';
   try {
     const snap = await db.collection('users').doc(userId).get();
@@ -63,31 +67,20 @@ exports.handler = async (event) => {
     }
   } catch {}
 
-  const material = MERCHANT_ID + orderId + amount + currency + secretMd5;
-
-  // 4) Render page (debug prints values; non-debug auto-submits)
-  const body = `<!doctype html><meta charset="utf-8">
-  <body style="font:14px system-ui;padding:20px">
-    <h3>PayHere Checkout ${debug ? '(debug mode — not submitting)' : ''}</h3>
-    <table border="1" cellpadding="6" style="margin-bottom:16px">
-      <tr><td>merchant_id</td><td>${MERCHANT_ID}</td></tr>
-      <tr><td>order_id</td><td>${orderId}</td></tr>
-      <tr><td>amount</td><td>${amount}</td></tr>
-      <tr><td>currency</td><td>${currency}</td></tr>
-      <tr><td>secretMd5</td><td>${secretMd5}</td></tr>
-      <tr><td>hash</td><td>${hash}</td></tr>
-      <tr><td>material used for md5</td><td><code>${material}</code></td></tr>
-    </table>
-
+  // render auto-submitting checkout form (SANDBOX)
+  const html = `<!doctype html><meta charset="utf-8">
+  <body>
     <form id="payhere" method="POST" action="https://sandbox.payhere.lk/pay/checkout">
       <input type="hidden" name="merchant_id" value="${MERCHANT_ID}">
       <input type="hidden" name="return_url"  value="${returnUrl}">
       <input type="hidden" name="cancel_url"  value="${cancelUrl}">
       <input type="hidden" name="notify_url"  value="${notifyUrl}">
       <input type="hidden" name="order_id"    value="${orderId}">
-      <input type="hidden" name="items"       value="Test Charge">
+      <input type="hidden" name="items"       value="Monthly Subscription">
       <input type="hidden" name="currency"    value="${currency}">
       <input type="hidden" name="amount"      value="${amount}">
+      <input type="hidden" name="recurrence"  value="${recurrence}">
+      <input type="hidden" name="duration"    value="${duration}">
       <input type="hidden" name="first_name"  value="${firstName}">
       <input type="hidden" name="last_name"   value="${lastName}">
       <input type="hidden" name="email"       value="${email}">
@@ -96,14 +89,9 @@ exports.handler = async (event) => {
       <input type="hidden" name="city"        value="${city}">
       <input type="hidden" name="country"     value="${country}">
       <input type="hidden" name="custom_1"    value="${userId}">
-      <!-- Add recurrence later once checkout works:
-      <input type="hidden" name="recurrence" value="1 Month">
-      <input type="hidden" name="duration"   value="Forever"> -->
       <input type="hidden" name="hash"        value="${hash}">
     </form>
-
-    ${debug ? '' : '<script>document.getElementById("payhere").submit();</script>'}
+    <script>document.getElementById('payhere').submit();</script>
   </body>`;
-
-  return { statusCode: 200, headers: { 'Content-Type': 'text/html' }, body };
+  return { statusCode: 200, headers: { 'Content-Type':'text/html' }, body: html };
 };
