@@ -1014,3 +1014,63 @@ body.no-scroll { overflow: hidden; }
 
 /* tiny helpers (safe if duplicated) */
 .hidden { display: none !important; }
+
+/* --- Daily limit toast --- */
+.limit-toast {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -120px;            /* hidden by default */
+  z-index: 9999;
+  transition: bottom 220ms ease;
+  pointer-events: none;      /* enable only when visible */
+}
+.limit-toast.visible {
+  bottom: 0;
+  pointer-events: auto;
+}
+.limit-toast__inner {
+  margin: 0 auto;
+  max-width: 980px;
+  background: #111827;       /* dark slate */
+  color: #f9fafb;
+  border-radius: 14px 14px 0 0;
+  padding: 14px 18px;
+  box-shadow: 0 -8px 24px rgba(0,0,0,.28);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.limit-toast__text {
+  font-size: 15px;
+  line-height: 1.35;
+}
+.limit-toast__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.limit-toast__close {
+  background: transparent;
+  border: 0;
+  color: #f9fafb;
+  font-size: 20px;
+  line-height: 1;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.limit-toast__close:hover { background: rgba(255,255,255,.06); }
+
+/* Reuse your primary button look; fallback if none present */
+.btn.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border: 0;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn.btn-primary:disabled { opacity: .6; cursor: not-allowed; }

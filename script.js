@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const piCard            = document.getElementById('pi-plus-card');
   const billingRow        = document.getElementById('billing-row');
 
+  // toast elements
+  const limitToast      = document.getElementById('limit-toast');
+  const toastUpgradeBtn = document.getElementById('toast-upgrade');
+  const toastCloseBtn   = document.getElementById('toast-close');
+
   let unsubUserDoc = null;
   let unsubSubDoc  = null;
 
@@ -76,7 +81,24 @@ document.addEventListener('DOMContentLoaded', () => {
         else renderFree();
       });
     }
+
+
+    function showLimitToast() {
+      limitToast?.classList.add('visible');
+    }
+    function hideLimitToast() {
+      limitToast?.classList.remove('visible');
+    }
+  
+    toastUpgradeBtn?.addEventListener('click', () => {
+      hideLimitToast();
+      openPlanModal();                // reuses your plan modal
+    });
+    toastCloseBtn?.addEventListener('click', hideLimitToast);
+
+
     
+
     function renderFree() {
       // header title
       if (appTitle) appTitle.textContent = 'PI';
@@ -158,20 +180,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function lockChatForToday() {
-    addMessage(
-      'You’ve reached your 10-message daily limit on the free plan. Upgrade to <b>PI+</b> for unlimited messages.',
-      'bot'
-    );
+    // disable composing for today
     userInput.disabled = true;
     sendBtn.disabled = true;
-
-    setDailyLockUntilMidnight();  // 👈 persist until tomorrow
-
-    if (typeof openPlanModal === 'function') {
-      setTimeout(() => openPlanModal(), 400);
-    }
+  
+    // upsell
+    showLimitToast();
+  
+    // optionally focus “Get PI+” for accessibility
+    setTimeout(() => toastUpgradeBtn?.focus(), 100);
   }
 
+  
   checkDailyLockOnLoad();
   
   
@@ -484,17 +504,20 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify({ messages })
     });
   
-    // ⛔ Daily limit hit
     if (res.status === 429) {
       const e = new Error('Daily message limit reached');
-      e.name = 'DailyLimitError';
-      e.code = 429;
+      e.code = 'DAILY_LIMIT';
       throw e;
     }
-    if (!res.ok) throw new Error(await res.text());
-  
+    if (!res.ok) {
+      const text = await res.text();
+      const e = new Error(text || `HTTP ${res.status}`);
+      e.code = 'GENERIC';
+      throw e;
+    }
     const { reply } = await res.json();
     return reply;
+
   }
 
   sendBtn.onclick = async () => {
@@ -538,21 +561,21 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       typing.remove();
     
-      // ✅ If the daily limit triggered, we've already called lockChatForToday()
-      if (err.code === 429 || err.name === 'DailyLimitError' || /Daily message limit/i.test(err.message)) {
-        return; // don't add the generic error bubble
+      if (err && err.code === 'DAILY_LIMIT') {
+        // Show the upgrade toast & lock the UI
+        lockChatForToday();
+      } else {
+        // Real error
+        addMessage('⚠️ Sorry, something went wrong. Try again.', 'bot');
+        console.error(err);
       }
-    
-      // Fallback generic error
-      addMessage('⚠️ Sorry, something went wrong. Try again.', 'bot');
-      console.error(err);
-
     } finally {
-
-      userInput.disabled = false;
-      sendBtn.disabled = false;
+      // Re-enable only if not locked by daily limit
+      if (!userInput.disabled) userInput.disabled = false;
+      if (!sendBtn.disabled)   sendBtn.disabled = false;
       userInput.focus();
     }
+
   };
 
   // Add message
