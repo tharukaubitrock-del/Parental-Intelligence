@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let unsubUserDoc = null;
   let unsubSubDoc  = null;
+  let isDailyLocked = false; // ← add here
+
 
   firebase.auth().onAuthStateChanged(async user => {
     document.body.classList.remove('initializing');
@@ -100,24 +102,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function renderPlus() {
-      // header title
+      // Header
       if (appTitle) appTitle.textContent = 'PI+';
     
-      // hide the extra line above the tile
+      // Hide the “no subscription” line
       if (subStatusEl) {
         subStatusEl.classList.add('hidden');
         subStatusEl.textContent = '';
         subStatusEl.classList.remove('sub-text');
       }
     
+      // Show PI+ card + billing block
       piCard?.classList.remove('hidden');
       billingRow?.classList.remove('hidden');
+    
+      // Hide Subscribe in user menu
       subscribeMenuItem?.classList.add('hidden');
-      document.getElementById('get-plus-btn')?.classList.add('disabled');
-      localStorage.removeItem('pi_daily_lock_until');
+    
+      // Disable the CTA in the plan modal (both class and actual disabled attr)
+      const cta = document.getElementById('get-plus-btn');
+      if (cta) { 
+        cta.classList.add('disabled'); 
+        cta.setAttribute('disabled', 'disabled'); 
+      }
+    
+      // 🔄 Clear any daily-limit lock and toast
+      isDailyLocked = false;                          // <- reset the runtime flag
+      localStorage.removeItem('pi_daily_lock_until'); // <- clear persisted lock
+      if (typeof hideLimitToast === 'function') hideLimitToast();
+    
+      // Make sure input is usable
       userInput.disabled = false;
-      sendBtn.disabled = false;
-
+      sendBtn.disabled   = false;
     }
 
   });
@@ -204,10 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function lockChatForToday() {
-    // disable composing for today
-    userInput.disabled = true;
-    sendBtn.disabled = true;
-  
+
+    isDailyLocked = true; 
+
     // upsell
     showLimitToast();
   
@@ -548,6 +563,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = userInput.value.trim();
     if (!text) return;
   
+    // 🔒 If we’re already locked for today, just show the toast and bail
+    if (isDailyLocked) {
+      showLimitToast();
+      return;
+    }
+
     const chatIdAtSend = currentChatId;
   
     // 🔒 Disable input while bot is responding
@@ -576,6 +597,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatId: chatIdAtSend,
         skipSave: false  // ensure it’s saved
       });
+      
+      isDailyLocked = false;
   
       // ✅ If user is still in this chat, show it
       if (chatIdAtSend !== currentChatId) {
