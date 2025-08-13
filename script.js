@@ -109,6 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
       billingRow?.classList.remove('hidden');
       subscribeMenuItem?.classList.add('hidden');
       document.getElementById('get-plus-btn')?.classList.add('disabled');
+
+      userInput.disabled = false;
+      sendBtn.disabled = false;
+
     }
 
   });
@@ -135,6 +139,20 @@ document.addEventListener('DOMContentLoaded', () => {
     planModal.classList.remove('open');
     document.body.classList.remove('no-scroll');
   }
+
+  function lockChatForToday() {
+    addMessage(
+      'You’ve reached your 10-message daily limit on the free plan. Upgrade to <b>PI+</b> for unlimited messages.',
+      'bot'
+    );
+    userInput.disabled = true;
+    sendBtn.disabled = true;
+  
+    if (typeof openPlanModal === 'function') {
+      setTimeout(() => openPlanModal(), 400);
+    }
+  }
+  
   
   // Open modal from sidebar button
   subscribeBtn?.addEventListener('click', openPlanModal);
@@ -417,19 +435,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   //talk to ai
-  async function getAIResponse(prompt,chatId) {
+  async function getAIResponse(prompt, chatId) {
     const chat = chats[chatId];
     const lang = chat?.lang || 'en';
   
-    // 1️⃣ Rebuild history
     const history = (chat?.messages || [])
-      .filter(msg => !msg.isGreeting)
-      .map(msg => ({
-        role:  msg.cls.includes('user') ? 'user' : 'assistant',
-        content: msg.text
-      }));
+      .filter(m => !m.isGreeting)
+      .map(m => ({ role: m.cls.includes('user') ? 'user' : 'assistant', content: m.text }));
   
-    // 2️⃣ Build full prompt with correct per-chat language
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT[lang] },
       { role: 'system', content: `Child Stage: ${childStage || 'Not set'}` },
@@ -437,16 +450,26 @@ document.addEventListener('DOMContentLoaded', () => {
       { role: 'user', content: prompt }
     ];
   
-    // Proxy through Netlify Function
+    // 🔐 include Firebase ID token
+    const user = firebase.auth().currentUser;
+    const idToken = user ? await user.getIdToken() : null;
+  
     const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(idToken ? { 'Authorization': `Bearer ${idToken}` } : {})
+      },
       body: JSON.stringify({ messages })
     });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Chat error ${res.status}: ${text}`);
+  
+    // ⛔ Daily limit hit
+    if (res.status === 429) {
+      lockChatForToday();     // disable UI + prompt upgrade
+      throw new Error('Daily message limit reached');
     }
+    if (!res.ok) throw new Error(await res.text());
+  
     const { reply } = await res.json();
     return reply;
   }
