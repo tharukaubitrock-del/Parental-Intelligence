@@ -150,40 +150,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!t) {
       t = document.createElement('div');
       t.id = 'limit-toast';
-      t.className = 'limit-toast';
+      t.setAttribute('role', 'alertdialog');
+      t.setAttribute('aria-live', 'assertive');
       t.innerHTML = `
-        <div class="limit-toast__box">
-          <div class="limit-toast__text">
-            You’ve reached your daily limit. Upgrade to <b>PI+</b> for unlimited messages.
-          </div>
-          <div class="limit-toast__actions">
-            <button id="toast-upgrade" class="btn btn-primary">Get PI+</button>
-            <button id="toast-close" class="toast-close" aria-label="Close">×</button>
-          </div>
+        <div class="toast-text">
+          You’ve reached your 10-message daily limit on the free plan.
+          Upgrade to <b>PI+</b> for unlimited messages, or try again tomorrow.
         </div>
+        <button class="toast-cta" id="toast-upgrade">Get PI+</button>
+        <button class="toast-close" id="toast-close" aria-label="Close">×</button>
       `;
       document.body.appendChild(t);
   
-      // Wire buttons
-      document.getElementById('toast-close').onclick = closeLimitToast;
+      // wiring
+      document.getElementById('toast-close').onclick = hideLimitToast;
       document.getElementById('toast-upgrade').onclick = () => {
-        closeLimitToast();
+        hideLimitToast();
         if (typeof openPlanModal === 'function') openPlanModal();
       };
-  
-      // animate in on next frame
-      requestAnimationFrame(() => t.classList.add('show'));
-    } else {
-      t.classList.add('show');
     }
+  
+    t.classList.add('open');
+    clearTimeout(window.__limitToastTimer);
+    window.__limitToastTimer = setTimeout(hideLimitToast, 10000);
   }
   
-  function closeLimitToast() {
+  function hideLimitToast() {
     const t = document.getElementById('limit-toast');
     if (!t) return;
-    t.classList.remove('show');
-    // optional: remove from DOM after animation
-    setTimeout(() => t.remove(), 250);
+    t.style.animation = 'toast-out .18s ease-in forwards';
+    setTimeout(() => {
+      t.classList.remove('open');
+      t.style.animation = '';
+    }, 180);
   }
   
 
@@ -205,12 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function lockChatForToday() {
-
-    addMessage(
-      'You’ve reached your 10-message daily limit on the free plan. Upgrade to <b>PI+</b> for unlimited messages.',
-      'bot'
-    );
-
     // disable composing for today
     userInput.disabled = true;
     sendBtn.disabled = true;

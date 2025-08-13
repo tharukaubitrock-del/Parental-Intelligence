@@ -1015,46 +1015,56 @@ body.no-scroll { overflow: hidden; }
 /* tiny helpers (safe if duplicated) */
 .hidden { display: none !important; }
 
-/* Daily-limit toast */
-.limit-toast {
+/* ===== Limit Toast ===== */
+#limit-toast {
   position: fixed;
   left: 50%;
   bottom: 24px;
-  transform: translateX(-50%) translateY(20px);
-  opacity: 0;
-  z-index: 9999;
-  transition: transform .2s ease, opacity .2s ease;
-  pointer-events: none;
-}
-.limit-toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-.limit-toast__box {
-  background: #111827;        /* dark */
-  color: #fff;
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  display: flex;
-  gap: 12px;
+  transform: translateX(-50%) translateY(16px);
+  width: calc(100% - 32px);
+  max-width: 720px;
+  display: none;
   align-items: center;
-  max-width: 640px;
+  gap: 16px;
+
+  background: #0f172a;             /* dark slate */
+  color: #e5e7eb;                   /* light text */
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.45);
+  z-index: 9999;
+  animation: toast-in .22s ease-out forwards;
 }
-.limit-toast__text {
-  line-height: 1.35;
-}
-.limit-toast__actions {
-  margin-left: auto;
-  display: flex;
-  gap: 8px;
-}
-.toast-close {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 18px;
+
+#limit-toast.open { display: flex; }
+#limit-toast .toast-text { flex: 1; line-height: 1.45; font-size: 15px; }
+
+#limit-toast .toast-cta {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
   cursor: pointer;
-  line-height: 1;
+  background: #2563eb;             /* PI+ accent */
+  color: #fff;
 }
+
+#limit-toast .toast-close {
+  background: transparent;
+  border: 0;
+  color: #9ca3af;
+  font-size: 20px;
+  cursor: pointer;
+}
+#limit-toast .toast-close:hover { color: #e5e7eb; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes toast-out {
+  to   { opacity: 0; transform: translateX(-50%) translateY(24px); }
+}
+
+@media (min-width: 768px) { #limit-toast { width: 640px; } }
