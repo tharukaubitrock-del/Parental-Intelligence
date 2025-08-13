@@ -259,16 +259,16 @@
   </div>
 
   <!-- Daily limit toast -->
-  <div id="limit-toast" class="limit-toast" aria-live="polite" aria-atomic="true">
-    <div class="limit-toast__inner">
-      <span class="limit-toast__text">
-        You’ve reached your 10-message daily limit on the free plan.
-      </span>
-      <div class="limit-toast__actions">
-        <button id="toast-upgrade" class="btn btn-primary">Get PI+</button>
-        <button id="toast-close" class="limit-toast__close" aria-label="Close">×</button>
-      </div>
+  <div id="limit-toast" role="dialog" aria-live="polite" aria-label="Daily limit reached">
+    <div class="toast-text">
+      You’ve reached your 10-message daily limit on the free plan.
     </div>
+
+    <!-- Small CTA aligned to the right (JS hooks into this id) -->
+    <button type="button" class="toast-cta" id="toast-upgrade">Get PI+</button>
+
+    <!-- Close (X) -->
+    <button type="button" class="toast-close" id="toast-close" aria-label="Close">×</button>
   </div>
 
 
