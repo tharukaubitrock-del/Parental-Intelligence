@@ -40,20 +40,34 @@ exports.handler = async (event) => {
       try {
         await db.runTransaction(async (tx) => {
           const doc = await tx.get(quotaRef);
-          let count = 0, date = today;
+
+          let count = 0;
+          let date = today;
 
           if (doc.exists) {
-            const d = doc.data();
+            const d = doc.data() || {};
             if (d.date === today) count = d.count || 0;
           }
+
           if (count >= 10) {
-            throw new admin.firestore.FirestoreError('failed-precondition', 'DAILY_LIMIT_REACHED');
+            const e = new Error('DAILY_LIMIT');
+            e.code = 'DAILY_LIMIT';
+            throw e; // aborts transaction
           }
-          // increment for this user message
-          tx.set(quotaRef, { date, count: count + 1, updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+
+          tx.set(
+            quotaRef,
+            {
+              date,
+              count: count + 1,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true }
+          );
         });
       } catch (e) {
-        if (e.code === 'failed-precondition') {
+        if (e && (e.code === 'DAILY_LIMIT' || e.message === 'DAILY_LIMIT')) {
+          // Tell the client to show the “limit reached” upsell UI
           return { statusCode: 429, body: 'Daily free message limit reached' };
         }
         throw e;
@@ -69,15 +83,15 @@ exports.handler = async (event) => {
     const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_KEY}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${OPENROUTER_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'google/gemini-2.0-flash-001',
         messages,
         max_tokens: 2500,
-        temperature: 0.2
-      })
+        temperature: 0.2,
+      }),
     });
 
     if (!resp.ok) {
@@ -87,10 +101,11 @@ exports.handler = async (event) => {
 
     const data = await resp.json();
     const reply = data.choices?.[0]?.message?.content?.trim() || '…';
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ reply })
+      body: JSON.stringify({ reply }),
     };
   } catch (err) {
     console.error('chat function error:', err);
