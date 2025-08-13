@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const planModal    = document.getElementById('plan-modal');
   const getPlusBtn   = document.getElementById('get-plus-btn');
   const db = firebase.firestore();
-
+  const appTitle = document.getElementById('app-title');
   const subscribeMenuItem = document.getElementById('subscribe-btn');
   const subStatusEl       = document.getElementById('subscription-status');
   const piCard            = document.getElementById('pi-plus-card');
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
       overlay.classList.add('hidden');
       dashboard.classList.remove('hidden');
       await loadUserProfile();
+      
       createNewChat(); 
     } else {
       overlay.classList.remove('hidden');
@@ -68,67 +69,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function watchSubscription(uid) {
-      unsubUserDoc = db.collection('users').doc(uid).onSnapshot(snap => {
-        const data = snap.exists ? snap.data() : {};
+      db.collection('users').doc(uid).onSnapshot((snap) => {
+        const data = snap.data() || {};
         const isSub = !!data.isSubscriber;
-        const subId = data.subscriptionId || null;
-    
-        if (!isSub) {
-          if (unsubSubDoc) { unsubSubDoc(); unsubSubDoc = null; }
-          renderFree();
-          return;
-        }
-    
-        // Base PI+ UI
-        renderPlus();
-    
-        // Optional: also reflect next charge date, etc.
-        if (subId) {
-          if (unsubSubDoc) unsubSubDoc();
-          unsubSubDoc = db
-            .collection('users').doc(uid)
-            .collection('subscriptions').doc(subId)
-            .onSnapshot(subSnap => {
-              const sub = subSnap.exists ? subSnap.data() : null;
-              const renewEl = piCard?.querySelector('.pi-renew');
-              if (sub?.nextCharge && renewEl) {
-                const next = new Date(sub.nextCharge).toLocaleDateString();
-                renewEl.textContent = `Your plan auto-renews every month (next: ${next})`;
-              }
-            });
-        }
+        if (isSub) renderPlus();
+        else renderFree();
       });
     }
     
     function renderFree() {
-      // Settings view
+      // header title
+      if (appTitle) appTitle.textContent = 'PI';
+    
+      // settings copy
       if (subStatusEl) {
+        subStatusEl.classList.remove('hidden');
         subStatusEl.textContent = 'You have no active subscription at this time.';
         subStatusEl.classList.add('sub-text');
       }
+    
       piCard?.classList.add('hidden');
       billingRow?.classList.add('hidden');
-    
-      // Show Subscribe item in user menu
       subscribeMenuItem?.classList.remove('hidden');
-    
-      // (optional) re-enable the “Get PI Plus” button in your plan modal
       document.getElementById('get-plus-btn')?.classList.remove('disabled');
     }
     
     function renderPlus() {
-      // Settings view
+      // header title
+      if (appTitle) appTitle.textContent = 'PI+';
+    
+      // hide the extra line above the tile
       if (subStatusEl) {
-        subStatusEl.textContent = 'PI+';
-        subStatusEl.classList.remove('sub-text'); // make it look like a heading label
+        subStatusEl.classList.add('hidden');
+        subStatusEl.textContent = '';
+        subStatusEl.classList.remove('sub-text');
       }
+    
       piCard?.classList.remove('hidden');
       billingRow?.classList.remove('hidden');
-    
-      // Hide Subscribe item in user menu
       subscribeMenuItem?.classList.add('hidden');
-    
-      // (optional) disable the plan modal CTA
       document.getElementById('get-plus-btn')?.classList.add('disabled');
     }
 
