@@ -1015,7 +1015,10 @@ body.no-scroll { overflow: hidden; }
 /* tiny helpers (safe if duplicated) */
 .hidden { display: none !important; }
 
-/* ===== Limit Toast ===== */
+
+
+
+/* ===== Limit Toast (updated layout) ===== */
 #limit-toast {
   position: fixed;
   left: 50%;
@@ -1024,37 +1027,53 @@ body.no-scroll { overflow: hidden; }
   width: calc(100% - 32px);
   max-width: 720px;
   display: none;
-  align-items: center;
-  gap: 16px;
+  align-items: center;                 /* keep items on one line */
+  justify-content: flex-start;         /* text at left, rest flows right */
+  gap: 10px;
 
-  background: #0f172a;             /* dark slate */
-  color: #e5e7eb;                   /* light text */
+  background: #0f172a;                 /* dark slate */
+  color: #e5e7eb;
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 14px 16px;
   box-shadow: 0 12px 36px rgba(0,0,0,.45);
   z-index: 9999;
   animation: toast-in .22s ease-out forwards;
 }
 
 #limit-toast.open { display: flex; }
-#limit-toast .toast-text { flex: 1; line-height: 1.45; font-size: 15px; }
 
+#limit-toast .toast-text {
+  flex: 1;                             /* take remaining space on the left */
+  line-height: 1.45;
+  font-size: 15px;
+}
+
+/* Smaller CTA aligned to the right */
 #limit-toast .toast-cta {
+  margin-left: auto;                   /* push the button to the far right */
   border: 0;
-  border-radius: 10px;
-  padding: 10px 16px;
+  border-radius: 8px;
+  padding: 6px 12px;                   /* smaller */
+  height: 32px;                        /* compact height */
+  line-height: 30px;
+  font-size: 14px;                     /* smaller text */
   font-weight: 700;
   cursor: pointer;
-  background: #2563eb;             /* PI+ accent */
+  background: #2563eb;                 /* PI+ accent */
   color: #fff;
 }
 
 #limit-toast .toast-close {
+  margin-left: 6px;
   background: transparent;
   border: 0;
   color: #9ca3af;
   font-size: 20px;
+  height: 32px;
+  width: 32px;
+  line-height: 32px;
+  border-radius: 6px;
   cursor: pointer;
 }
 #limit-toast .toast-close:hover { color: #e5e7eb; }
@@ -1068,3 +1087,4 @@ body.no-scroll { overflow: hidden; }
 }
 
 @media (min-width: 768px) { #limit-toast { width: 640px; } }
+
