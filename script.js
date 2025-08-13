@@ -82,23 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-
-    function showLimitToast() {
-      limitToast?.classList.add('visible');
-    }
-    function hideLimitToast() {
-      limitToast?.classList.remove('visible');
-    }
-  
-    toastUpgradeBtn?.addEventListener('click', () => {
-      hideLimitToast();
-      openPlanModal();                // reuses your plan modal
-    });
-    toastCloseBtn?.addEventListener('click', hideLimitToast);
-
-
-    
-
     function renderFree() {
       // header title
       if (appTitle) appTitle.textContent = 'PI';
@@ -162,6 +145,48 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('no-scroll');
   }
 
+  function showLimitToast() {
+    let t = document.getElementById('limit-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'limit-toast';
+      t.className = 'limit-toast';
+      t.innerHTML = `
+        <div class="limit-toast__box">
+          <div class="limit-toast__text">
+            You’ve reached your daily limit. Upgrade to <b>PI+</b> for unlimited messages.
+          </div>
+          <div class="limit-toast__actions">
+            <button id="toast-upgrade" class="btn btn-primary">Get PI+</button>
+            <button id="toast-close" class="toast-close" aria-label="Close">×</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(t);
+  
+      // Wire buttons
+      document.getElementById('toast-close').onclick = closeLimitToast;
+      document.getElementById('toast-upgrade').onclick = () => {
+        closeLimitToast();
+        if (typeof openPlanModal === 'function') openPlanModal();
+      };
+  
+      // animate in on next frame
+      requestAnimationFrame(() => t.classList.add('show'));
+    } else {
+      t.classList.add('show');
+    }
+  }
+  
+  function closeLimitToast() {
+    const t = document.getElementById('limit-toast');
+    if (!t) return;
+    t.classList.remove('show');
+    // optional: remove from DOM after animation
+    setTimeout(() => t.remove(), 250);
+  }
+  
+
   function setDailyLockUntilMidnight() {
     const now = new Date();
     const tomorrow = new Date(now);
@@ -180,6 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function lockChatForToday() {
+
+    addMessage(
+      'You’ve reached your 10-message daily limit on the free plan. Upgrade to <b>PI+</b> for unlimited messages.',
+      'bot'
+    );
+
     // disable composing for today
     userInput.disabled = true;
     sendBtn.disabled = true;
