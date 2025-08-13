@@ -965,3 +965,52 @@ body.no-scroll { overflow: hidden; }
 
 .fineprint { margin-top: 14px; color: #aeb3bd; font-size: 12px; }
 .fineprint a { color: #cdd2ff; }
+
+
+/* ---- Subscription tile ---- */
+.pi-card {
+  background: #eaf3ff;           /* light blue */
+  border: 1px solid #cfe2ff;
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.pi-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.pi-badge {
+  background: #1b64f2;           /* deep blue */
+  color: #fff;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: .2px;
+}
+
+.pi-renew {
+  color: #233;
+  font-size: 14px;
+  opacity: .9;
+}
+
+.pi-features {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+  line-height: 1.55;
+}
+
+.billing-row { margin-top: 12px; }
+.billing-row a {
+  color: #1b64f2;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* tiny helpers (safe if duplicated) */
+.hidden { display: none !important; }

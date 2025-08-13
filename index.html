@@ -174,10 +174,33 @@
           <p id="field-phone">+94 712345678</p>
         </div>
 
-      <section class="settings-section">
-        <h3>Subscription</h3>
-        <p class="sub-text">You have no active subscription at this time.</p>
-      </section>
+        <section class="settings-section" id="settings-subscription">
+          <h3>Subscription</h3>
+        
+          <!-- Status line (keeps the “free” text by default) -->
+          <div id="subscription-status" class="sub-text">
+            You have no active subscription at this time.
+          </div>
+        
+          <!-- PI+ features tile (hidden until subscribed) -->
+          <div id="pi-plus-card" class="pi-card hidden" aria-hidden="true">
+            <div class="pi-card__head">
+              <span class="pi-badge">PI+</span>
+              <span class="pi-renew">Your plan auto-renews every month</span>
+            </div>
+            <ul class="pi-features">
+              <li>Priority responses</li>
+              <li>Longer chats</li>
+              <li>Early features & experiments</li>
+              <li>Email support</li>
+            </ul>
+          </div>
+        
+          <!-- Billing help (hidden until subscribed) -->
+          <div id="billing-row" class="billing-row hidden" aria-hidden="true">
+            <a href="/help.html#billing" target="_blank">Need help with billing?</a>
+          </div>
+        </section>
 
       <section class="settings-section">
         <h3>About</h3>
