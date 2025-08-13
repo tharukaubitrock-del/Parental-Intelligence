@@ -225,6 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // upsell
     showLimitToast();
+
+    // keep input usable (don’t disable)
+    userInput.disabled = false;
+    sendBtn.disabled = false;
   
     // optionally focus “Get PI+” for accessibility
     setTimeout(() => toastUpgradeBtn?.focus(), 100);
