@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
       billingRow?.classList.remove('hidden');
       subscribeMenuItem?.classList.add('hidden');
       document.getElementById('get-plus-btn')?.classList.add('disabled');
-
+      localStorage.removeItem('pi_daily_lock_until');
       userInput.disabled = false;
       sendBtn.disabled = false;
 
@@ -140,6 +140,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('no-scroll');
   }
 
+  function setDailyLockUntilMidnight() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setHours(24, 0, 0, 0); // next midnight
+    localStorage.setItem('pi_daily_lock_until', String(+tomorrow));
+  }
+  
+  function checkDailyLockOnLoad() {
+    const until = Number(localStorage.getItem('pi_daily_lock_until') || 0);
+    if (until && Date.now() < until) {
+      // The helpers use userInput/sendBtn which are already defined above
+      lockChatForToday();
+    } else if (until && Date.now() >= until) {
+      localStorage.removeItem('pi_daily_lock_until');
+    }
+  }
+
   function lockChatForToday() {
     addMessage(
       'You’ve reached your 10-message daily limit on the free plan. Upgrade to <b>PI+</b> for unlimited messages.',
@@ -147,11 +164,15 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     userInput.disabled = true;
     sendBtn.disabled = true;
-  
+
+    setDailyLockUntilMidnight();  // 👈 persist until tomorrow
+
     if (typeof openPlanModal === 'function') {
       setTimeout(() => openPlanModal(), 400);
     }
   }
+
+  checkDailyLockOnLoad();
   
   
   // Open modal from sidebar button
@@ -465,8 +486,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // ⛔ Daily limit hit
     if (res.status === 429) {
-      lockChatForToday();     // disable UI + prompt upgrade
-      throw new Error('Daily message limit reached');
+      const e = new Error('Daily message limit reached');
+      e.name = 'DailyLimitError';
+      e.code = 429;
+      throw e;
     }
     if (!res.ok) throw new Error(await res.text());
   
@@ -514,9 +537,18 @@ document.addEventListener('DOMContentLoaded', () => {
   
     } catch (err) {
       typing.remove();
+    
+      // ✅ If the daily limit triggered, we've already called lockChatForToday()
+      if (err.code === 429 || err.name === 'DailyLimitError' || /Daily message limit/i.test(err.message)) {
+        return; // don't add the generic error bubble
+      }
+    
+      // Fallback generic error
       addMessage('⚠️ Sorry, something went wrong. Try again.', 'bot');
       console.error(err);
+
     } finally {
+
       userInput.disabled = false;
       sendBtn.disabled = false;
       userInput.focus();
