@@ -1031,7 +1031,7 @@ body.no-scroll { overflow: hidden; }
   justify-content: flex-start;         /* text at left, rest flows right */
   gap: 10px;
 
-  background: #0f172a;                 /* dark slate */
+  background: #13455D;                 /* dark slate */
   color: #e5e7eb;
   border: 1px solid rgba(255,255,255,.08);
   border-radius: 14px;
@@ -1049,20 +1049,30 @@ body.no-scroll { overflow: hidden; }
   font-size: 15px;
 }
 
-/* Smaller CTA aligned to the right */
-#limit-toast .toast-cta {
-  margin-left: auto;                   /* push the button to the far right */
-  border: 0;
-  border-radius: 8px;
-  padding: 6px 12px;                   /* smaller */
-  height: 32px;                        /* compact height */
-  line-height: 30px;
-  font-size: 14px;                     /* smaller text */
+/* Center the text inside the Get PI+ button */
+#limit-toast .toast-cta{
+  display: inline-flex;               /* lay out content on a flex row */
+  align-items: center;                /* vertical centering */
+  justify-content: center;            /* horizontal centering */
+  padding: 8px 14px;
+  height: 36px;                       /* or 40px if you prefer taller */
+  line-height: 1;                     /* prevent baseline pushing text down */
+  vertical-align: middle;             /* avoid baseline alignment quirks */
   font-weight: 700;
-  cursor: pointer;
-  background: #2563eb;                 /* PI+ accent */
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,.6);
+  background: #2b6cff;
   color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  -webkit-appearance: none;           /* Safari */
+  appearance: none;
 }
+
+#limit-toast .toast-cta:focus{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(43,108,255,.35);
+}
+
 
 #limit-toast .toast-close {
   margin-left: 6px;
