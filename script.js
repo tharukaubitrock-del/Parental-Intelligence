@@ -567,22 +567,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = userInput.value.trim();
     if (!text) return;
   
-    // 🔒 If we’re already locked for today, just show the toast and bail
-    if (isDailyLocked) {
-      showLimitToast();
-      return;
-    }
-
     const chatIdAtSend = currentChatId;
   
-    // 🔒 Disable input while bot is responding
-    userInput.disabled = true;
-    sendBtn.disabled = true;
-  
-    // Show user's message immediately
+    // Always show the user's message first
     addMessage(text, 'user', { chatId: chatIdAtSend });
-  
     userInput.value = '';
+  
+    // If daily-locked, show the upsell and skip the API call
+    if (isDailyLocked) {
+      showLimitToast();           // just shows the popup
+      return;                     // keep input enabled so they can keep typing
+    }
   
     // Show typing indicator
     const typing = document.createElement('div');
@@ -591,42 +586,32 @@ document.addEventListener('DOMContentLoaded', () => {
     chatLog.appendChild(typing);
     chatLog.scrollTop = chatLog.scrollHeight;
   
+    // Disable only while waiting for the model
+    userInput.disabled = true;
+    sendBtn.disabled = true;
+  
     try {
       const reply = await getAIResponse(text, chatIdAtSend);
-  
       typing.remove();
-  
-      // ✅ Let `addMessage()` handle saving to the correct chat
-      addMessage(reply, 'bot', {
-        chatId: chatIdAtSend,
-        skipSave: false  // ensure it’s saved
-      });
-      
-      isDailyLocked = false;
-  
-      // ✅ If user is still in this chat, show it
-      if (chatIdAtSend !== currentChatId) {
-        // no need to render; it’s already saved and will show on return
-      }
-  
+      addMessage(reply, 'bot', { chatId: chatIdAtSend, skipSave: false });
     } catch (err) {
       typing.remove();
-    
-      if (err && err.code === 'DAILY_LIMIT') {
-        // Show the upgrade toast & lock the UI
-        lockChatForToday();
-      } else {
-        // Real error
-        addMessage('⚠️ Sorry, something went wrong. Try again.', 'bot');
-        console.error(err);
+  
+      // Handle daily-limit from getAIResponse
+      if (err?.message === 'DAILY_LIMIT' || err?.status === 429) {
+        lockChatForToday();       // sets isDailyLocked = true + shows popup (do NOT permanently disable inputs inside this)
+        return;
       }
+  
+      // Generic error
+      addMessage('⚠️ Sorry, something went wrong. Try again.', 'bot');
+      console.error(err);
     } finally {
-      // Re-enable only if not locked by daily limit
-      if (!userInput.disabled) userInput.disabled = false;
-      if (!sendBtn.disabled)   sendBtn.disabled = false;
+      // Re-enable for the next attempt (daily lock is handled by isDailyLocked check at the top)
+      userInput.disabled = false;
+      sendBtn.disabled = false;
       userInput.focus();
     }
-
   };
 
   // Add message
