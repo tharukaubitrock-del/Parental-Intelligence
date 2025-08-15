@@ -34,7 +34,7 @@ exports.handler = async (event) => {
   const MERCHANT_ID     = process.env.PAYHERE_MERCHANT_ID;
   const MERCHANT_SECRET = process.env.PAYHERE_MERCHANT_SECRET;
 
-  const amount     = (1000.00).toFixed(2); // string with 2dp
+  const amount     = (499.00).toFixed(2); // string with 2dp
   const currency   = 'LKR';
   const recurrence = '1 Month';
   const duration   = 'Forever';
@@ -70,7 +70,7 @@ exports.handler = async (event) => {
   // render auto-submitting checkout form (SANDBOX)
   const html = `<!doctype html><meta charset="utf-8">
   <body>
-    <form id="payhere" method="POST" action="https://sandbox.payhere.lk/pay/checkout">
+    <form id="payhere" method="POST" action="https://www.payhere.lk/pay/checkout">
       <input type="hidden" name="merchant_id" value="${MERCHANT_ID}">
       <input type="hidden" name="return_url"  value="${returnUrl}">
       <input type="hidden" name="cancel_url"  value="${cancelUrl}">

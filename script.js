@@ -291,19 +291,19 @@ document.addEventListener('DOMContentLoaded', () => {
     en: {
       slogan:   'For the Parent in All of Us.',
       tagline:  'Because every parent deserves answers, empathy, and peace of mind.',
-      greeting: 'Hello {name}! I’m PI+ — your coaching companion. How can I help you today?',
+      greeting: 'Hello {name}! I’m Parental Intelligence — your coaching companion. How can I help you today?',
       placeholder: 'Ask me anything…'
     },
     si: {
       slogan:   'ඔබ තුළ සිටින මව්පියන් වෙනුවෙන්.',
       tagline:  'සෑම දෙමව්පියෙකුටම පිළිතුරු, කරුණාව සහ සිතේ සහනය හිමි විය යුතුය.',
-      greeting: 'හෙලෝ {name}! මම PI+ — ඔබගේ උපදේශන සගයා. මට අද ඔබට කෙසේ උදව් කළ හැකිද?',
+      greeting: 'හෙලෝ {name}! මම Parental Intelligence — ඔබගේ උපදේශන සගයා. මට අද ඔබට කෙසේ උදව් කළ හැකිද?',
       placeholder:'ඕනෑම දෙයක් අහන්න...'
     }
   };
 
   const SYSTEM_PROMPT = {
-    en: `You are PI+, a warm Sri Lankan parenting coach...`,
+    en: `You are Parental Intelligence, a warm Sri Lankan parenting coach...`,
     si: `ඔබ PI+, උණුසුම් සිතුවිලි සහ දකුණු ආචාර…`
   };
 
