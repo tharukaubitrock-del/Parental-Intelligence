@@ -32,9 +32,9 @@ exports.handler = async (event) => {
     const userSnap = await db.collection('users').doc(uid).get();
     const isSubscriber = !!(userSnap.exists && userSnap.data().isSubscriber);
 
-    // 3) Daily limit check for free users (10/day, UTC)
+    // 3) Daily limit check for free users (5/day, UTC)
     if (!isSubscriber) {
-      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC)
+      const today = new Date().toISOString().slice(0, 5); // YYYY-MM-DD (UTC)
       const quotaRef = db.collection('users').doc(uid).collection('quota').doc('daily');
 
       try {
