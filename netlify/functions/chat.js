@@ -13,6 +13,8 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
+// Change daily cap here (or set FREE_DAILY_LIMIT in Netlify env)
+const DAILY_LIMIT = parseInt(process.env.FREE_DAILY_LIMIT || '5', 10);
 
 exports.handler = async (event) => {
   try {
@@ -32,9 +34,9 @@ exports.handler = async (event) => {
     const userSnap = await db.collection('users').doc(uid).get();
     const isSubscriber = !!(userSnap.exists && userSnap.data().isSubscriber);
 
-    // 3) Daily limit check for free users (5/day, UTC)
+    // 3) Daily limit check for free users (UTC-based)
     if (!isSubscriber) {
-      const today = new Date().toISOString().slice(0, 5); // YYYY-MM-DD (UTC)
+      const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
       const quotaRef = db.collection('users').doc(uid).collection('quota').doc('daily');
 
       try {
@@ -42,23 +44,21 @@ exports.handler = async (event) => {
           const doc = await tx.get(quotaRef);
 
           let count = 0;
-          let date = today;
-
           if (doc.exists) {
             const d = doc.data() || {};
             if (d.date === today) count = d.count || 0;
           }
 
-          if (count >= 10) {
+          if (count >= DAILY_LIMIT) {
             const e = new Error('DAILY_LIMIT');
             e.code = 'DAILY_LIMIT';
-            throw e; // aborts transaction
+            throw e; // abort transaction
           }
 
           tx.set(
             quotaRef,
             {
-              date,
+              date: today,
               count: count + 1,
               updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             },
@@ -67,7 +67,6 @@ exports.handler = async (event) => {
         });
       } catch (e) {
         if (e && (e.code === 'DAILY_LIMIT' || e.message === 'DAILY_LIMIT')) {
-          // Tell the client to show the “limit reached” upsell UI
           return { statusCode: 429, body: 'Daily free message limit reached' };
         }
         throw e;
