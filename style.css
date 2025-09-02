@@ -1114,3 +1114,426 @@ body.no-scroll { overflow: hidden; }
 }
 
 @media (min-width: 768px) { #limit-toast { width: 640px; } }
+
+
+/* ── Sidebar brand/logo ─────────────────────────────────────────────── */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .75rem 0 1rem;
+  border-bottom: 1px solid #e5eef3;
+  margin-bottom: .75rem;
+}
+.sidebar-brand img {
+  max-width: 300px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.02));
+}
+
+/* Sidebar: remove top padding entirely */
+.sidebar{
+  padding: 0 12px 12px !important;   /* was 1em top; now 0 */
+  gap: 10px;                          /* keeps space after the logo tidy */
+}
+
+/* Brand row: no extra air, align left */
+.sidebar-brand{
+  margin-left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #e8eef4;
+  padding: -1 !important;              /* no internal padding */
+  margin: -1 !important;               /* no external margin */
+}
+
+/* Logo: smaller, crisp */
+.sidebar-brand img{
+  padding: 0 !important;              /* no internal padding */
+  margin: 0 !important;               /* no external margin */
+  max-width: 128px;                   /* tweak to taste (100–128px works well) */
+  height: auto;
+  display: block;                     /* removes stray whitespace under images */
+}
+
+/* ── Buttons & groups ───────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .65rem .9rem;
+  border: 1px solid #cbd6dd;
+  border-radius: 10px;
+  background: #fff;
+  color: #13455D;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .06s ease;
+}
+.btn:hover { background: #f2f8fc; border-color: #b7c7d3; }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: #13455D;
+  color: #fff;
+  border-color: #13455D;
+}
+.btn-primary:hover { background: #0f374a; }
+
+/* ── Section titles with icons ──────────────────────────────────────── */
+.sidebar-group { margin-top: .5rem; }
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .5rem 0 .4rem;
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #627d98;
+}
+.section-title .section-icon {
+  flex: 0 0 auto;
+}
+
+/* ── Inputs & lists (slight refresh) ───────────────────────────────── */
+.sidebar select {
+  width: 100%;
+  padding: .6rem .7rem;
+  border: 1px solid #cbd6dd;
+  border-radius: 10px;
+  background: #fff;
+  color: #13455D;
+}
+#chat-list {
+  list-style: none;
+  padding: 0;
+  margin: .25rem 0 1rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+#chat-list li {
+  padding: .55rem .8rem;
+  border-radius: 10px;
+  transition: background .15s ease, color .15s ease;
+}
+#chat-list li:hover { background: #eaf4ff; color: #0f2a4f; }
+#chat-list li.active { background: #d7e7ff; color: #0f2a4f; }
+
+/* ── User chip & menu items ────────────────────────────────────────── */
+.user-chip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: #fff;
+  border: 1px solid #cbd6dd;
+  border-radius: 999px;
+  padding: .4rem .6rem;
+  justify-content: space-between;
+}
+.user-chip .avatar-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #d7e7ff; color: #0f2a4f; font-weight: 700;
+  font-size: .85rem;
+}
+.user-menu-popup {
+  width: 100%;
+  left: 0; transform: none; /* override absolute centering */
+  bottom: calc(100% + .5rem);
+  border-radius: 12px;
+  border: 1px solid #e0e7ee;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+.user-menu-popup .menu-item {
+  width: 100%;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem;
+  background: #fff;
+  border: none; border-bottom: 1px solid #f2f4f7;
+  cursor: pointer; text-align: left; font-weight: 500; color: #13455D;
+}
+.user-menu-popup .menu-item:last-child { border-bottom: none; }
+.user-menu-popup .menu-item:hover { background: #f7fbff; }
+
+
+/* Sidebar user menu – stable positioning + safe animation */
+.user-menu { position: relative; }
+
+.user-menu-popup{
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 8px;               /* keep a little breathing room */
+  right: 8px;              /* stretch to sidebar width */
+  width: auto;             /* override fixed 220px */
+  max-width: none;
+  margin: 0;
+  transform: none;         /* kill translateX(-50%) */
+}
+
+
+/* style.css – put near your sidebar inputs section */
+.sidebar button,
+.sidebar select,
+.sidebar option,
+.section-title,
+.user-name {
+  font-family: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-weight: 500; /* tweak if you prefer 500 */
+}
+
+
+/* replace the old fadeIn for this element (no X translation) */
+@keyframes popInY {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.user-menu-popup.visible{
+  display: block;
+  animation: popInY .18s ease-out;
+  will-change: opacity, transform;
+}
+
+/* -------- Floating composer (minimal) -------- */
+
+/* Remove the old footer bar look */
+.input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 16px 24px !important;      /* breathing room from edges */
+}
+
+/* The pill itself */
+.input-area .composer{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 980px;                    /* keeps it elegant on wide screens */
+  margin: 0 auto;                      /* center in the chat */
+  padding: 12px 12px 12px 16px;
+  border-radius: 999px;
+  background: #ffffff;                 /* pill floats on the chat bg */
+  border: 1px solid #e6edf4;
+  box-shadow:
+    0 8px 24px rgba(18, 52, 77, 0.10),
+    0 2px 6px rgba(18, 52, 77, 0.06);
+}
+
+.input-area .composer:focus-within{
+  border-color: #b3ccff;
+  box-shadow:
+    0 0 0 3px rgba(179, 204, 255, .35),
+    0 10px 28px rgba(18, 52, 77, 0.12);
+}
+
+/* Textarea: transparent inside the pill, auto-grow */
+#user-input{
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;                          /* pill handles padding */
+  font-size: 1rem;
+  line-height: 1.4;
+  max-height: 9rem;                    /* gentle cap on expansion */
+  resize: none;
+}
+
+/* Send button: circular, subtle, icon-only */
+#send{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: #13455D;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+}
+
+#send:hover{ background:#0f374a; box-shadow: 0 2px 10px rgba(19, 69, 93, .25); }
+#send:active{ transform: translateY(1px); }
+
+/* Hide the text label but keep it accessible */
+.sr-only{
+  position:absolute!important; width:1px;height:1px; padding:0;margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap;border:0;
+}
+
+/* We no longer need extra padding at the bottom of the chat */
+.chat{ padding-bottom: 16px !important; }  /* was added for fixed footer; keep it slim */
+
+/* Make the page under the composer the SAME color as the chat */
+.main-panel { background: #f7fbfc !important; }  /* matches .chat bg */
+
+/* Kill any legacy footer bar styling so only the pill shows */
+.input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 16px 24px !important;   /* gentle spacing from edges */
+}
+
+/* Keep a little room so the composer doesn't hug the edge */
+.chat { padding-bottom: 16px !important; }
+
+/* Set a comfortable fixed height for the textarea WHEN EMPTY */
+:root { --pi-composer-empty-h: 40px; }   /* tweak 36–44px to taste */
+
+/* Keep the pill tall enough to look airy */
+.input-area .composer{
+  min-height: 64px;                       /* pill height (12px top + 40 + 12px bottom) */
+  align-items: center;       
+  padding-bottom: 18px !important;            /* centers the textarea block in the pill */
+}
+
+/* Normal typing */
+#user-input{
+  line-height: 1.4;                        /* regular line-height when typing */
+  padding: 0;                              /* pill handles vertical padding */
+}
+
+/* Vertically center the placeholder ONLY while empty */
+#user-input:placeholder-shown{
+  height: var(--pi-composer-empty-h);
+  line-height: var(--pi-composer-empty-h); /* centers placeholder inside the box */
+}
+
+/* Make sure the send icon is dead-center in the circle */
+#send{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 0;
+}
+#send svg{ width: 18px; height: 18px; display: block; }
+
+/* A) Kill the textarea's inner box, let the outer pill be the only shape */
+.input-area textarea#user-input{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;      /* no inner rounded corners */
+  line-height: 1.45;
+  max-height: 9rem;                 /* keep auto-grow reasonable */
+  overflow-y: auto;                  /* scroll when max reached */
+}
+
+/* B) Keep text away from bottom curve when typing */
+.input-area textarea#user-input{
+  padding: 8px 12px 16px !important; /* <-- extra bottom pad prevents collision */
+}
+
+/* Keep placeholder vertically centered ONLY when empty */
+:root { --pi-composer-empty-h: 40px; }
+.input-area textarea#user-input:placeholder-shown{
+  padding: 0 !important;                   /* remove pad so centering works */
+  height: var(--pi-composer-empty-h);
+  line-height: var(--pi-composer-empty-h); /* perfect vertical centering */
+}
+
+/* -------- HERO (first-load) -------- */
+.hero-welcome {
+  text-align: center;
+  margin: 0 auto 1.5rem;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 40px);
+  color: #1a3a5b;
+}
+.hidden { display: none !important; }
+
+/* When hero mode is on, center the content vertically */
+.main-panel.hero-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;     /* center vertically */
+  min-height: calc(100vh - 72px); /* minus header height */
+}
+
+/* Hide the scrolling chat while hero is visible */
+.main-panel.hero-mode #chat,
+.main-panel.hero-mode #tagline,
+.main-panel.hero-mode #tagline-si {
+  display: none;
+}
+
+/* Make the composer float in the middle and look like a single pill */
+.main-panel.hero-mode .input-area{
+  position: static !important;     /* override fixed-at-bottom rules */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: min(920px, 92vw);
+  margin: 1rem auto 0;
+  padding: 0;                       /* composer pill has its own padding */
+}
+
+/* The pill itself */
+.main-panel.hero-mode .input-area textarea{
+  border-radius: 999px;
+  padding: 1.1rem 1.25rem;
+}
+
+/* Keep the bottom-fixed composer for normal chat view (already in file).
+   No change needed there. */
+
+/* Sinhala typography tweaks if you want them */
+.main-panel.lang-si .hero-welcome {
+  letter-spacing: 0;
+  /* If you ship a Sinhala font, add it first: */
+  /* font-family: 'Noto Sans Sinhala', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; */
+}
+
+/* --- Stop centering the entire main panel in hero mode --- */
+.main-panel.hero-mode{
+  display: block !important;        /* undo the flex */
+  min-height: auto !important;
+}
+
+/* --- Center only the hero content vertically --- */
+:root { --app-header-h: 72px; }     /* adjust if your header is taller/shorter */
+
+.main-panel.hero-mode #hero{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* fill the viewport minus the header and a bit of space for the pill */
+  min-height: calc(100vh - var(--app-header-h) - 180px);
+  margin: 0 auto 0;
+}
+
+/* Keep the composer as a centered pill, but don't affect the header */
+.main-panel.hero-mode .input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  width: min(920px, 92vw);
+  margin: 1.25rem auto 0;
+  padding: 0;
+}
+
+/* Hide chat while in hero mode (optional: hide taglines too if you want) */
+.main-panel.hero-mode #chat{ display:none; }
+/* .main-panel.hero-mode #tagline,
+.main-panel.hero-mode #tagline-si{ display:none; } */
+
+
+
+/* Sidebar surface: gentle vertical gradient and inner edge */
+.sidebar{
+  background: linear-gradient(180deg, #f9fcff 0%, #f1f7ff 100%);
+  border-right: 1px solid var(--free-stroke);
+  box-shadow: inset -1px 0 0 rgba(19,69,93,.04), 2px 0 24px rgba(19,69,93,.04);
+}

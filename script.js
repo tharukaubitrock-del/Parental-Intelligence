@@ -23,6 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const loginBtn        = document.getElementById('login');
   const sendBtn         = document.getElementById('send');
   const userInput       = document.getElementById('user-input');
+
+  // Auto-grow the textarea (keep placeholder centered when empty)
+  userInput.addEventListener('input', () => {
+    if (userInput.value.trim() === '') {
+      userInput.style.height = getComputedStyle(document.documentElement)
+        .getPropertyValue('--pi-composer-empty-h').trim() || '40px';
+      return;
+    }
+    userInput.style.height = 'auto';
+    userInput.style.height = Math.min(userInput.scrollHeight, 144) + 'px';
+  });
+
+  // Enter to send, Shift+Enter = newline
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+
   const newChatBtn      = document.getElementById('new-chat');
   const sidebarStage    = document.getElementById('sidebar-stage-select');
   const stageModal      = document.getElementById('stage-modal');
@@ -201,16 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   wireToastHandlers();
   
-  function hideLimitToast() {
-    const t = document.getElementById('limit-toast');
-    if (!t) return;
-    t.style.animation = 'toast-out .18s ease-in forwards';
-    setTimeout(() => {
-      t.classList.remove('open');
-      t.style.animation = '';
-    }, 180);
-  }
-  
 
   function setDailyLockUntilMidnight() {
     const now = new Date();
@@ -291,13 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
     en: {
       slogan:   'For the Parent in All of Us.',
       tagline:  'Because every parent deserves answers, empathy, and peace of mind.',
-      greeting: 'Hello {name}! I’m Parental Intelligence — your coaching companion. How can I help you today?',
       placeholder: 'Ask me anything…'
     },
     si: {
       slogan:   'ඔබ තුළ සිටින මව්පියන් වෙනුවෙන්.',
       tagline:  'සෑම දෙමව්පියෙකුටම පිළිතුරු, කරුණාව සහ සිතේ සහනය හිමි විය යුතුය.',
-      greeting: 'හෙලෝ {name}! මම Parental Intelligence — ඔබගේ උපදේශන සගයා. මට අද ඔබට කෙසේ උදව් කළ හැකිද?',
       placeholder:'ඕනෑම දෙයක් අහන්න...'
     }
   };
@@ -306,6 +314,39 @@ document.addEventListener('DOMContentLoaded', () => {
     en: `You are Parental Intelligence, a warm Sri Lankan parenting coach...`,
     si: `ඔබ PI+, උණුසුම් සිතුවිලි සහ දකුණු ආචාර…`
   };
+
+  // Localized hero (big greeting) titles
+  const HERO_TITLE = {
+    en: 'Hi, {name}!',
+    si: 'ආයුබෝවන්, {name}!'
+  };
+
+  const mainPanel = document.querySelector('.main-panel');
+  const heroEl    = document.getElementById('hero');
+  const heroTitle = document.getElementById('hero-title');
+
+  function updateHeroTitle() {
+    if (!heroTitle) return;
+    const tmpl = HERO_TITLE[userLang] || HERO_TITLE.en;
+    heroTitle.textContent = tmpl.replace('{name}', parentName || 'there');
+  }
+
+  function showHero() {
+    if (!mainPanel || !heroEl) return;
+    updateHeroTitle();
+    heroEl.classList.remove('hidden');
+    mainPanel.classList.remove('leaving-hero'); // clear any previous animation state
+    mainPanel.classList.add('hero-mode');
+  }
+  
+  function hideHero() {
+    if (!mainPanel || !heroEl) return;
+    heroEl.classList.add('hidden');
+    // Play the "drop" animation as we exit hero mode
+    mainPanel.classList.remove('hero-mode');
+    mainPanel.classList.add('leaving-hero');
+    setTimeout(() => mainPanel.classList.remove('leaving-hero'), 340); // match CSS duration
+  }
 
   // Language toggle
   function setLanguage(lang) {
@@ -318,6 +359,8 @@ document.addEventListener('DOMContentLoaded', () => {
     langEnBtn.classList.toggle('active', lang === 'en');
     langSiBtn.classList.toggle('active', lang === 'si');
     userInput.placeholder = TEXTS[lang].placeholder;
+    mainPanel?.classList.toggle('lang-si', lang === 'si');  // optional CSS hook
+    if (mainPanel?.classList.contains('hero-mode')) updateHeroTitle();
   }
   langEnBtn.onclick = () => setLanguage('en');
   langSiBtn.onclick = () => setLanguage('si');
@@ -456,10 +499,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderChatList();
     loadChat(currentChatId);
 
-    // Greeting
-    const tmpl    = TEXTS[userLang].greeting;
-    const message = tmpl.replace('{name}', parentName);
-    addMessage(message, 'bot', { isGreeting: true });
+    // Greeting → use hero instead of a chat bubble
+    showHero();
 
     // 🔽 Close sidebar on mobile
     if (window.innerWidth <= 768) {
@@ -476,7 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
       li.classList.toggle('active', id === currentChatId);
       li.onclick = () => {
         // ✅ Collect messages from current chat UI
-        const messages = Array.from(chatLog.children).map(el => ({
+        const messages = Array.from(chatLog.children)
+        .filter(el => !el.classList.contains('typing'))
+        .map(el => ({
           text: el.dataset.raw || el.innerText,
           cls: el.className,
           isGreeting: el.dataset.isGreeting === 'true'
@@ -511,13 +554,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
     const chatMessages = chat?.messages || [];
     chatMessages.forEach(msg => {
-      addMessage(msg.text, msg.cls.split(' ')[1], {
+      // msg.cls is like "message user" | "message bot"
+      const role = (msg.cls || '').split(' ')[1] || 'bot';
+      addMessage(msg.text, role, {
         isGreeting: msg.isGreeting,
-        skipSave: true  // ✅ Don't duplicate message in history
+        skipSave: true
       });
     });
   
     renderChatList();
+  
+    const hasAny = (chat?.messages || []).some(
+      m => !m.isGreeting && (m.text || '').trim()
+    );
+    if (hasAny) hideHero(); else showHero();
   }
 
   // Stage selection
@@ -573,6 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   sendBtn.onclick = async () => {
+    if (mainPanel.classList.contains('hero-mode')) hideHero();
     const text = userInput.value.trim();
     if (!text) return;
   
