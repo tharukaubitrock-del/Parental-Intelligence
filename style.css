@@ -1537,3 +1537,53 @@ body.no-scroll { overflow: hidden; }
   border-right: 1px solid var(--free-stroke);
   box-shadow: inset -1px 0 0 rgba(19,69,93,.04), 2px 0 24px rgba(19,69,93,.04);
 }
+
+/* --- Mobile fixed header + composer spacers ------------------------------ */
+:root {
+  --mobile-header-h: 56px;     /* adjust to your header’s actual height */
+  --composer-h: 64px;          /* approx. input-area height */
+}
+
+@media (max-width: 768px) {
+  /* Keep the viewport height stable even with browser bars */
+  .main-panel {
+    min-height: 100dvh;
+    /* optional: if content siblings need offset */
+    /* padding-top: var(--mobile-header-h); */
+  }
+
+  /* Fix header to the top on mobile */
+  .app-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1001;            /* above the input-area (which is 1000) */
+  }
+
+  /* Your input-area is already fixed bottom on mobile; we just normalize sizes */
+  .input-area {
+    height: var(--composer-h);
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  }
+
+  /* Make sure chat never sits behind the header or the composer */
+  .chat {
+    padding-top: var(--mobile-header-h);
+    padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 768px) {
+  .main-panel.hero-mode .input-area{
+    position: fixed !important;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid #e0e7ee;
+    height: var(--composer-h);
+  }
+  /* Make the hero fill the space between header and composer */
+  .main-panel.hero-mode #hero{
+    min-height: calc(100dvh - var(--mobile-header-h) - var(--composer-h));
+  }
+}
+
