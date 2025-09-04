@@ -24,6 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn         = document.getElementById('send');
   const userInput       = document.getElementById('user-input');
 
+  // --- Composer height -> CSS var for chat padding
+  const composer = document.querySelector('.input-area');
+  const setPad = () =>
+    document.documentElement.style
+      .setProperty('--composer-h', composer.offsetHeight + 'px');
+
+  setPad();
+  new ResizeObserver(setPad).observe(composer);
+  window.addEventListener('resize', setPad);
+
   // Auto-grow the textarea (keep placeholder centered when empty)
   userInput.addEventListener('input', () => {
     if (userInput.value.trim() === '') {
@@ -311,7 +321,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const SYSTEM_PROMPT = {
-    en: `You are Parental Intelligence, a warm Sri Lankan parenting coach...`,
+    en: `You are Parental Intelligence, a warm Sri Lankan parenting coach...
+    If the user asks who created/designed/built you or the app, let them know you were created by BITROCK. Never mention Google or any names of other AI models`,
     si: `ඔබ PI+, උණුසුම් සිතුවිලි සහ දකුණු ආචාර…`
   };
 

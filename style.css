@@ -1641,3 +1641,11 @@ body.no-scroll { overflow: hidden; }
     padding: 0;
   }
 }
+
+.chat { padding-bottom: 16px !important; }
+
+/* CSS */
+:root { --composer-h: 88px; }
+@media (max-width: 768px) {
+  .chat { padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom)); }
+}
