@@ -1649,3 +1649,106 @@ body.no-scroll { overflow: hidden; }
 @media (max-width: 768px) {
   .chat { padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom)); }
 }
+
+/* Keep the hero subtitle tiny and tight beneath the title */
+.hero-welcome h1{
+  margin: 0; /* kill default h1 bottom margin for a tight stack */
+}
+
+.hero-sub{
+  margin-top: 4px;                 /* very small gap */
+  font-weight: 500;
+  font-size: clamp(12px, 1.4vw, 13px);  /* much smaller than the big title */
+  line-height: 1.35;
+  color: #355a74;                  /* softer than the title */
+  max-width: 44ch;
+  margin-left: auto; margin-right: auto; /* center under the title */
+}
+
+/* Tiny subtitle right beneath "Hi, {name}!" */
+.hero-welcome h1{ 
+  margin: 0;                   /* remove default h1 gap */
+}
+
+.hero-welcome{ 
+  text-align: center;          /* keep both lines centered */
+}
+
+.hero-sub{
+  margin: 4px auto 0;          /* very small gap under the H1 */
+  font-weight: 500;
+  font-size: clamp(12px, 1.2vw, 13px);
+  line-height: 1.35;
+  color: #355a74;
+  max-width: 44ch;             /* keep it readable on wide screens */
+}
+
+/* Optional: make the gap foolproof even if margins change */
+.main-panel.hero-mode #hero{
+  gap: 4px;                    /* stacks H1 + subtitle with a tight gap */
+}
+
+
+/* Hero title + tiny subtitle */
+#hero-title{
+  margin: 0;                    /* kill default h1 margin */
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.hero-sub{
+  margin: 6px auto 0;           /* small gap below the title */
+  font-size: clamp(16px, 4vw, 18px);
+  line-height: 1.4;
+  font-weight: 500;
+  color: #3a6177;               /* softer than the title */
+  max-width: 48ch;              /* comfortable width for 2–3 lines */
+  text-align: center;
+  text-wrap: balance;           /* nicer line breaks on modern browsers */
+  opacity: .9;
+  font-weight: 500;
+
+}
+
+/* subtle entrance */
+.hero-welcome > *{ animation: heroFadeUp .35s ease both; }
+#hero-title { animation-delay: .02s; }
+.hero-sub   { animation-delay: .12s; }
+
+@keyframes heroFadeUp{
+  from{ opacity: 0; transform: translateY(4px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+  --composer-h: 80px; /* initial; JS will keep it accurate */
+}
+
+@media (max-width: 768px) {
+  /* Pin composer and account for iOS home indicator */
+  .input-area{
+    position: fixed !important;
+    left: 0; right: 0;
+    bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    width: 100%;
+  }
+
+  /* Reserve exactly the composer’s height at the bottom of the chat */
+  .chat{
+    /* lets wheel/keyboard scroll to visible end correctly */
+    padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+    scroll-padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+  }
+
+  /* Extra safety: an invisible spacer that’s always as tall as the composer */
+  .chat::after{
+    content: "";
+    display: block;
+    height: calc(var(--composer-h) + env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+}

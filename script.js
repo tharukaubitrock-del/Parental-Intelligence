@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Composer height -> CSS var for chat padding
   const composer = document.querySelector('.input-area');
+  const setComposerSpace = () => {
+    const h = composer.getBoundingClientRect().height;
+    document.documentElement.style.setProperty('--composer-h', `${h}px`);
+  };
+  
+  setComposerSpace();
+  new ResizeObserver(setComposerSpace).observe(composer);
+  window.addEventListener('resize', setComposerSpace);
+
+
   const setPad = () =>
     document.documentElement.style
       .setProperty('--composer-h', composer.offsetHeight + 'px');
@@ -332,14 +342,26 @@ document.addEventListener('DOMContentLoaded', () => {
     si: 'ආයුබෝවන්, {name}!'
   };
 
+  const HERO_SUB = {
+    en: "What’s up with you and your little one today?",
+    si: "අද ඔයාටයි පොඩි එක්කෙනාටයි කොහොමද?"
+  };
+
   const mainPanel = document.querySelector('.main-panel');
   const heroEl    = document.getElementById('hero');
   const heroTitle = document.getElementById('hero-title');
+  const heroSub = document.getElementById('hero-sub');
+
 
   function updateHeroTitle() {
     if (!heroTitle) return;
     const tmpl = HERO_TITLE[userLang] || HERO_TITLE.en;
-    heroTitle.textContent = tmpl.replace('{name}', parentName || 'there');
+    heroTitle.textContent = tmpl.replace('{name}', parentName || 'there'); //replaces if username cant be found
+  }
+
+  function updateHeroSubtitle() {
+    if (!heroSub) return;
+    heroSub.textContent = HERO_SUB[userLang] || HERO_SUB.en;
   }
 
   function showHero() {
@@ -348,6 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
     heroEl.classList.remove('hidden');
     mainPanel.classList.remove('leaving-hero'); // clear any previous animation state
     mainPanel.classList.add('hero-mode');
+    updateHeroTitle();
+    updateHeroSubtitle();
   }
   
   function hideHero() {
@@ -358,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mainPanel.classList.add('leaving-hero');
     setTimeout(() => mainPanel.classList.remove('leaving-hero'), 340); // match CSS duration
   }
+  
 
   // Language toggle
   function setLanguage(lang) {
