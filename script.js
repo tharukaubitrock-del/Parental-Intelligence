@@ -24,6 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendBtn         = document.getElementById('send');
   const userInput       = document.getElementById('user-input');
 
+  const root = document.documentElement;
+  const inputArea = document.querySelector('.input-area');
+  const composerEl = inputArea?.querySelector('.composer') || inputArea;
+
+  function setComposerHeight(){
+    const h = Math.ceil((composerEl || inputArea).getBoundingClientRect().height);
+    root.style.setProperty('--composer-h', h + 'px');
+  }
+  new ResizeObserver(setComposerHeight).observe(composerEl || inputArea);
+  window.addEventListener('orientationchange', setComposerHeight);
+  window.addEventListener('resize', setComposerHeight);
+  setComposerHeight();
+
   // --- Composer height -> CSS var for chat padding
   const composer = document.querySelector('.input-area');
   const setComposerSpace = () => {

@@ -1752,3 +1752,22 @@ body.no-scroll { overflow: hidden; }
     pointer-events: none;
   }
 }
+
+:root { --composer-h: 88px; } /* sensible default */
+
+.chat{
+  /* leave room equal to the actual composer height */
+  padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px)) !important;
+  /* when we scrollIntoView(), keep content above the pill */
+  scroll-padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* extra invisible block at the very end of the chat so nothing can go under */
+.chat::after{
+  content: "";
+  display: block;
+  height: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* make sure the pill truly overlays other content */
+.input-area{ z-index: 1000; }
