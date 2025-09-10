@@ -7,7 +7,14 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="/img/logo.png" type="image/x-icon">
+  <!-- Light & dark versions -->
+  <link rel="icon" href="/img/favicon-light.png" type="image/svg+xml" sizes="any" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/img/favicon-dark.png"  type="image/svg+xml" sizes="any" media="(prefers-color-scheme: dark)">
+  <!-- Fallback for older browsers -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b1f2c" media="(prefers-color-scheme: dark)">
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -31,7 +38,9 @@
   <!-- Login/Register Overlay -->
   <div id="overlay" class="overlay">
     <div class="card">
-      <img src="/img/logo.png" alt="PI+ Logo" width="200" height="200" />
+      <div class = "login-logo" style="margin-bottom: 15px;"> 
+        <img src="/img/logo-text.png" alt="PI+ Logo" width="200" height="auto" />
+      </div>
       <h2 id="slogan">For the Parent in All of Us.</h2>
       <div class="privacy">Your privacy is our top priority. Conversations are confidential.</div>
       <label>Email:</label>
