@@ -356,8 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const HERO_SUB = {
-    en: "What’s up with you and your little one today?",
-    si: "අද ඔයාටයි පොඩි එක්කෙනාටයි කොහොමද?"
+    en: "Parenting isn’t easy—you’re not alone 🩵",
+    si: "දෙමාපිය රැකවරණය කියන්නේ ලේසි දෙයක් නෙවෙයි, ඔබ තනිවී නැහැ 🩵"
   };
 
   const mainPanel = document.querySelector('.main-panel');
