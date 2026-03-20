@@ -19,82 +19,95 @@ function loadSA() {
   return sa;
 }
 
-if (!admin.apps.length) {
-  admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
+function getDb() {
+  if (!admin.apps.length) {
+    admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
+  }
+  return admin.firestore();
 }
-const db = admin.firestore();
 
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
-
-  const data = qs.parse(event.body || '');
-
-  // Log every webhook (handy while testing)
   try {
-    await db.collection('payhereWebhookLog')
-      .doc(`${data.order_id || 'noorder'}_${Date.now()}`)
-      .set({ receivedAt: admin.firestore.FieldValue.serverTimestamp(), data });
-  } catch (_) {}
+    if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
-  // --- Verify MD5 ---
-  const secretMd5 = crypto.createHash('md5')
-    .update(process.env.PAYHERE_MERCHANT_SECRET)
-    .digest('hex').toUpperCase();
-  const localMd5sig = crypto.createHash('md5')
-    .update(
-      (data.merchant_id || '') +
-      (data.order_id || '') +
-      (data.payhere_amount || '') +
-      (data.payhere_currency || '') +
-      (data.status_code || '') +
-      secretMd5
-    )
-    .digest('hex').toUpperCase();
+    const db = getDb();
+    const data = qs.parse(event.body || '');
 
-  if (localMd5sig !== data.md5sig) {
-    console.error('BAD SIGNATURE', { got: data.md5sig, exp: localMd5sig, order: data.order_id });
-    return { statusCode: 400, body: 'BAD SIGNATURE' };
+    // Log every webhook (handy while testing)
+    try {
+      await db.collection('payhereWebhookLog')
+        .doc(`${data.order_id || 'noorder'}_${Date.now()}`)
+        .set({ receivedAt: admin.firestore.FieldValue.serverTimestamp(), data });
+    } catch (_) {}
+
+    const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
+    if (!merchantSecret) {
+      return { statusCode: 500, body: 'Missing PAYHERE_MERCHANT_SECRET' };
+    }
+
+    // --- Verify MD5 ---
+    const secretMd5 = crypto.createHash('md5')
+      .update(merchantSecret)
+      .digest('hex').toUpperCase();
+    const localMd5sig = crypto.createHash('md5')
+      .update(
+        (data.merchant_id || '') +
+        (data.order_id || '') +
+        (data.payhere_amount || '') +
+        (data.payhere_currency || '') +
+        (data.status_code || '') +
+        secretMd5
+      )
+      .digest('hex').toUpperCase();
+
+    if (localMd5sig !== data.md5sig) {
+      console.error('BAD SIGNATURE', { got: data.md5sig, exp: localMd5sig, order: data.order_id });
+      return { statusCode: 400, body: 'BAD SIGNATURE' };
+    }
+
+    // --- Find userId (order mapping first, then custom_1 fallback) ---
+    let userId = null;
+    try {
+      const snap = await db.collection('subscriptionOrders').doc(data.order_id).get();
+      if (snap.exists) userId = snap.data().userId;
+    } catch (_) {}
+    if (!userId && data.custom_1) userId = data.custom_1;
+    if (!userId) {
+      console.error('Unknown order/user for', data.order_id);
+      return { statusCode: 400, body: 'Unknown order' };
+    }
+
+    const userRef = db.collection('users').doc(userId);
+    // Some IPNs don’t include subscription_id; fall back to order_id
+    const subDocId = data.subscription_id || data.order_id || 'unknown';
+    const subRef   = userRef.collection('subscriptions').doc(subDocId);
+
+    // --- Treat any status_code === '2' as a successful charge ---
+    if (data.status_code === '2') {
+      await subRef.set({
+        subscriptionId: data.subscription_id || null,
+        orderId:        data.order_id,
+        status:         'active',
+        lastPayment:    { id: data.payment_id, amount: Number(data.payhere_amount) || 0 },
+        nextCharge:     data.item_rec_date_next || null,
+        method:         data.method || null,
+        updatedAt:      admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      await userRef.set({
+        isSubscriber:   true,
+        subscriptionId: data.subscription_id || null,
+        subscribedAt:   admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+    } else if (data.message_type === 'RECURRING_STOPPED') {
+      await subRef.set({ status: 'canceled', updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+      await userRef.set({ isSubscriber: false, unsubscribedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+    }
+
+    return { statusCode: 200, body: 'OK' };
+  } catch (err) {
+    console.error('notify function error:', err);
+    return { statusCode: 500, body: err?.message || 'Server error' };
   }
-
-  // --- Find userId (order mapping first, then custom_1 fallback) ---
-  let userId = null;
-  try {
-    const snap = await db.collection('subscriptionOrders').doc(data.order_id).get();
-    if (snap.exists) userId = snap.data().userId;
-  } catch (_) {}
-  if (!userId && data.custom_1) userId = data.custom_1;
-  if (!userId) {
-    console.error('Unknown order/user for', data.order_id);
-    return { statusCode: 400, body: 'Unknown order' };
-  }
-
-  const userRef = db.collection('users').doc(userId);
-  // Some IPNs don’t include subscription_id; fall back to order_id
-  const subDocId = data.subscription_id || data.order_id || 'unknown';
-  const subRef   = userRef.collection('subscriptions').doc(subDocId);
-
-  // --- Treat any status_code === '2' as a successful charge ---
-  if (data.status_code === '2') {
-    await subRef.set({
-      subscriptionId: data.subscription_id || null,
-      orderId:        data.order_id,
-      status:         'active',
-      lastPayment:    { id: data.payment_id, amount: Number(data.payhere_amount) || 0 },
-      nextCharge:     data.item_rec_date_next || null,
-      method:         data.method || null,
-      updatedAt:      admin.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-
-    await userRef.set({
-      isSubscriber:   true,
-      subscriptionId: data.subscription_id || null,
-      subscribedAt:   admin.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
-
-  } else if (data.message_type === 'RECURRING_STOPPED') {
-    await subRef.set({ status: 'canceled', updatedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-    await userRef.set({ isSubscriber: false, unsubscribedAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
-  }
-
-  return { statusCode: 200, body: 'OK' };
 };

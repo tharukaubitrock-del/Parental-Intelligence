@@ -4,13 +4,26 @@ const admin = require('firebase-admin');
 
 function loadSA() {
   const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
-  if (!b64) throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_BASE64');
-  return JSON.parse(Buffer.from(b64, 'base64').toString('utf8'));
+  if (b64) {
+    return JSON.parse(Buffer.from(b64, 'base64').toString('utf8'));
+  }
+
+  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!raw) throw new Error('Missing Firebase service account env');
+  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+  raw = raw.replace(/\\"/g, '"');
+
+  const sa = JSON.parse(raw);
+  if (sa.private_key?.includes('\\n')) sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+  return sa;
 }
-if (!admin.apps.length) {
-  admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
+
+function getDb() {
+  if (!admin.apps.length) {
+    admin.initializeApp({ credential: admin.credential.cert(loadSA()) });
+  }
+  return admin.firestore();
 }
-const db = admin.firestore();
 
 const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
 // Change daily cap here (or set FREE_DAILY_LIMIT in Netlify env)
@@ -21,6 +34,8 @@ exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
       return { statusCode: 405, body: 'Method Not Allowed' };
     }
+
+    const db = getDb();
 
     // 1) Verify Firebase ID token from client
     const authHeader = event.headers.authorization || '';
@@ -78,6 +93,9 @@ exports.handler = async (event) => {
     if (!messages || !Array.isArray(messages)) {
       return { statusCode: 400, body: 'Missing messages' };
     }
+    if (!OPENROUTER_KEY) {
+      return { statusCode: 500, body: 'Missing OPENROUTER_KEY' };
+    }
 
     const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -108,6 +126,6 @@ exports.handler = async (event) => {
     };
   } catch (err) {
     console.error('chat function error:', err);
-    return { statusCode: 500, body: 'Server error' };
+    return { statusCode: 500, body: err?.message || 'Server error' };
   }
 };
