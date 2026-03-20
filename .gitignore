@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Root build outputs
+/assets/
+/index.html
+
+# Dependency folders
+/node_modules/
+/landing-page/node_modules/
+
+# Landing page build artifacts
+/landing-page/dist/
+
+# Environment / secrets
+.env*
+!.env.example
+/firebase-service.json
+/functions/firebase-service.json
+/netlify/functions/firebase-service.json
+/landing-page/.env*
+!/landing-page/.env.example
