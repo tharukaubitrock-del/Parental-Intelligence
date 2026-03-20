@@ -9,13 +9,28 @@ function loadSA() {
   }
 
   let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  if (!raw) throw new Error('Missing Firebase service account env');
-  if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
-  raw = raw.replace(/\\"/g, '"');
+  if (raw) {
+    if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
+    raw = raw.replace(/\\"/g, '"');
 
-  const sa = JSON.parse(raw);
-  if (sa.private_key?.includes('\\n')) sa.private_key = sa.private_key.replace(/\\n/g, '\n');
-  return sa;
+    const sa = JSON.parse(raw);
+    if (sa.private_key?.includes('\\n')) sa.private_key = sa.private_key.replace(/\\n/g, '\n');
+    return sa;
+  }
+
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+  if (projectId && clientEmail && privateKey) {
+    if (privateKey.includes('\\n')) privateKey = privateKey.replace(/\\n/g, '\n');
+    return {
+      project_id: projectId,
+      client_email: clientEmail,
+      private_key: privateKey,
+    };
+  }
+
+  throw new Error('Missing Firebase service account env');
 }
 
 function getDb() {
