@@ -20,3 +20,11 @@
 /netlify/functions/firebase-service.json
 /landing-page/.env*
 !/landing-page/.env.example
+
+# Legacy local-only files from old main history
+/functions/
+/landing.html
+/notes.html
+/Notes.html
+/img/bot.gif
+/img/family.png
