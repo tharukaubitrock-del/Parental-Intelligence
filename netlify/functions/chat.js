@@ -18,9 +18,12 @@ function loadSA() {
     return sa;
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+  const projectId = process.env.FIREBASE_PROJECT_ID ||
+    (clientEmail && clientEmail.includes('@')
+      ? clientEmail.split('@')[1].replace('.iam.gserviceaccount.com', '')
+      : '');
   if (projectId && clientEmail && privateKey) {
     if (privateKey.includes('\\n')) privateKey = privateKey.replace(/\\n/g, '\n');
     return {
