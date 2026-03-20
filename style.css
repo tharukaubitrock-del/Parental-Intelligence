@@ -1,0 +1,1773 @@
+/* Base Reset and Layout */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: 'Manrope', sans-serif;
+    background: #ffffff;
+    color: #13455D;
+  }
+  
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(19, 69, 93, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  /* Card (Login/Register/Modals) */
+  .card {
+    background: #ffffff;
+    padding: 2em;
+    border-radius: 12px;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    color: #13455D;
+  }
+
+  /* Reduce space below the logo */
+  .card svg,
+  .card img {
+    margin-bottom: -2em; /* Previously 0.5em or more */
+  }
+
+  /* Adjust heading spacing */
+  .card h2 {
+    margin-bottom: 0.2em;
+    font-size: 1.3em;
+  }
+
+  /* Increase space between privacy text and inputs */
+  .card .privacy {
+    margin-bottom: 1.5em;
+    font-size: 0.95em;
+  }
+
+  /* Right-align labels above inputs */
+  .card label {
+    display: block;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+    color: #13455D;
+  }
+    
+  .card input,
+  .card select {
+    width: 100%;
+    padding: 0.6em;
+    margin-bottom: 0.5em;
+    background: #f0f6f9;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #13455D;
+  }
+  
+  .card button {
+    width: 100%;
+    padding: 0.8em;
+    margin-top: 1em;
+    background: #13455D;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .card button:hover {
+    background: #0f374a;
+  }
+  
+  /* Language Buttons */
+  .lang-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 0.5em;
+  }
+  
+  .lang-buttons button {
+    flex: 1;
+    padding: 0.5em;
+    background: transparent;
+    color: #13455D;
+    border: 1px solid #13455D;
+    border-radius: 6px;
+  }
+  
+  .lang-buttons button.active,
+  .lang-buttons button:hover {
+    background: #13455D;
+    color: #ffffff;
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  /* Dashboard Layout */
+  .dashboard {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: #ffffff;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    background: #f0f6f9;
+    padding: 1em;
+    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    color: #13455D;
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar h3 {
+    margin-bottom: 0.5em;
+    color: #13455D;
+    font-size: 1em;
+  }
+  
+  #chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1em;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  
+  #chat-list li {
+    padding: 0.5em;
+    margin-bottom: 0.3em;
+    background: #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #13455D;
+  }
+  
+  #chat-list li.active {
+    background: #13455D;
+    color: #ffffff;
+  }
+  
+  .sidebar button,
+  .sidebar select {
+    width: 100%;
+    padding: 0.6em;
+    background: #ffffff;
+    border: 1px solid #13455D;
+    border-radius: 6px;
+    color: #13455D;
+    cursor: pointer;
+  }
+  
+  .sidebar button:hover,
+  .sidebar select:hover {
+    background: #e1eef4;
+  }
+  
+  /* Main Panel */
+ 
+
+  .main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    position: relative;
+    height: 100%;
+  }
+  
+  /* Header */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    background: #13455D;
+    color: #ffffff;
+    position: relative;
+  }
+
+  .powered {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.9em;
+  }
+  
+  .bitrock-logo {
+    height: 40px;
+    width: auto;
+    margin-left: -10px;
+  }
+  
+  .hamburger {
+    display: none;
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  
+  /* Chat Area */
+  .tagline {
+    text-align: center;
+    padding: 0.5em 1em;
+    color: #13455D;
+  }
+  
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1em;
+    background: #f7fbfc;
+  }
+  
+  .message {
+    animation: fadeInUp 0.3s ease;
+    position: relative;
+    margin: 0.5em 0;
+    padding: 1em;
+    border-radius: 1.5em;
+    max-width: 80%;
+    word-break: break-word;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Add timestamp */
+  .message::after {
+    content: attr(data-time);
+    font-size: 0.7em;
+    opacity: 0.6;
+    position: absolute;
+    bottom: -1.2em;
+    right: 1em;
+  }
+  
+  .user {
+    align-self: flex-end;
+    background: #13455D;
+    color: #ffffff;
+  }
+  
+  .bot {
+    align-self: flex-start;
+    background: #e1eef4;
+    color: #13455D;
+  }
+  
+  /* Input Area */
+  .input-area {
+    display: flex;
+    padding: 1em;
+    background: #f0f6f9;
+    border-top: 1px solid #ccc;
+  }
+  
+  #user-input {
+    flex: 1;
+    padding: 0.8em;
+    background: #ffffff;
+    border: 1px solid #13455D;
+    border-radius: 6px;
+    color: #13455D;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    line-height: 1.2;
+    height: 2.5em; /* or whatever fits your layout */
+    overflow-y: hidden;
+    resize: none;
+
+  }
+
+  #user-input::placeholder {
+    font-family: 'Manrope', sans-serif; /* or any font you prefer */
+    font-size: 0.95rem;
+    color: #9aaec3;  /* soft gray-blue or anything else */
+    opacity: 1; /* ensure it's visible */
+  }
+  
+  #user-input:disabled,
+  #send:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+    
+  #send {
+    margin-left: 0.5em;
+    padding: 0.8em 1.2em;
+    background: #13455D;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* Typing Animation */
+  .typing {
+    opacity: 0.7;
+    font-style: italic;
+  }
+  
+  .typing .dot {
+    display: inline-block;
+    animation: blink 1s infinite;
+    margin: 0 2px;
+  }
+  
+  .typing .dot:nth-child(2) { animation-delay: .2s; }
+  .typing .dot:nth-child(3) { animation-delay: .4s; }
+  
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+  }
+  
+  /* ========== RESPONSIVE MOBILE STYLES ========== */
+  @media (max-width: 768px) {
+    .dashboard {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-100%);
+      z-index: 1000;
+      height: 100%;
+    }
+  
+    .sidebar.active {
+      transform: translateX(0%);
+    }
+  
+    .hamburger {
+      display: block;
+      margin-right: 1em;
+    }
+  }
+
+
+  .message.bot {
+    line-height: 1.6;
+    font-size: 1em;
+  }
+  
+  /* Add spacing between paragraphs and lists */
+  .message.bot p,
+  .message.bot ul,
+  .message.bot ol {
+    margin: 0.5em 0;
+  }
+
+  .message.bot ul,
+  .message.bot ol {
+    padding-left: 1.5em; /* or 2em for more indent */
+    margin-left: 0;;
+  }
+  
+  /* Ensure list items have breathing room */
+  .message.bot li {
+    margin-bottom: 0.3em;
+  }
+  
+  /* Optional: Space after headings */
+  .message.bot h1,
+  .message.bot h2,
+  .message.bot h3 {
+    margin: 0.8em 0 0.4em;
+    font-weight: bold;
+  }
+
+
+  .message.bot strong {
+    font-weight: 600;
+  }
+  
+  .message.bot em {
+    font-style: italic;
+  }
+
+    /* ── Disable italics in bot messages ───────────────────────────────────────── */
+  .message.bot,
+  .message.bot p,
+  .message.bot li,
+  .message.bot span {
+    font-style: normal !important;
+  }
+
+  /* If you still want to allow <em> for true emphasis elsewhere, you can be more specific: */
+  .message.bot em {
+    font-style: normal !important;
+  }
+
+  /* make the chat container a flex column so auto-margins work */
+  .chat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* strip the “bubble” look off of all bot replies */
+  .message.bot {
+    background: transparent !important;
+    border-radius: 0         !important;
+    padding: 0               !important;
+    /* keep a little vertical spacing… */
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    /* …and push it to the right edge */
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  /* ensure user bubbles still size to their text and sit on the left */
+  .message.user {
+    /* keep padding/border-radius from your existing .user rule */
+    margin-right: 0;
+    margin-left: auto;
+  }
+  
+  /* ── NEW MODERN SIDEBAR STYLING ───────────────────────────────────────── */
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  border-right: none;
+  padding: 1.5em 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  z-index: 1001;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar button,
+.sidebar select {
+  background: #f7faff;
+  border: 1px solid #d0e2ff;
+  color: #1a3a5b;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.sidebar button:hover,
+.sidebar select:hover {
+  background: #e4f0ff;
+  transform: translateY(-1px);
+}
+
+.sidebar h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3em;
+  color: #627d98;
+}
+
+/* Chat list items */
+#chat-list li {
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#chat-list li:hover {
+  background: #e4f0ff;
+  color: #1a3a5b;
+}
+
+#chat-list li.active {
+  background: #cfe2ff;
+  color: #0f2a4f;
+}
+
+/* ── INPUT AREA REFRESH ─────────────────────────────────────────────── */
+.input-area {
+  padding: 1em 1.5em;
+  background: #ffffff;
+  border-top: 1px solid #e0e7ee;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.03);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.input-area textarea {
+  flex: 1;
+  padding: 0.8em 1em;
+  border: 1px solid #cbd6dd;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  resize: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-area textarea:focus {
+  outline: none;
+  border-color: #85a5ff;
+  box-shadow: 0 0 4px rgba(132, 165, 255, 0.4);
+}
+
+.input-area button {
+  padding: 0.8em 1.4em;
+  border-radius: 999px;
+  background: #5078f2;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.input-area button:hover {
+  background: #3c5fcb;
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE TWEAKS ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+  }
+  .input-area {
+    padding: 0.8em 1em;
+  }
+  .input-area textarea {
+    font-size: 0.9rem;
+  }
+}
+
+/* at the very bottom of style.css */
+.input-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f0f6f9; /* or whatever your bg is */
+  border-top: 1px solid #ccc;
+  padding: 1em;
+  z-index: 1000;
+}
+
+/* make room for the fixed footer so the chat never hides behind it */
+.chat {
+  padding-bottom: 4.5em; /* ≈ height of your input-area */
+}
+
+/* ── Desktop: footer lives inside .main-panel ───────────────────────── */
+@media (min-width: 769px) {
+  .main-panel {
+    position: relative;    /* establish containing block */
+  }
+  .input-area {
+    position: absolute;    /* sit at the bottom of .main-panel */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+  }
+  .chat {
+    padding-bottom: 4.5em; /* reserve space for the footer */
+  }
+}
+
+/* ── Mobile: footer fixed to viewport bottom ───────────────────────── */
+@media (max-width: 768px) {
+  .input-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .chat {
+    padding-bottom: 4.5em;
+  }
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#chat-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+/* User menu sits at bottom via auto margin */
+.user-menu {
+  position: relative;
+  margin-top: auto;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+.user-menu button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.user-menu button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+/* Popup positioning relative to button */
+.user-menu-popup {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 0.5rem;
+  width: 220px;
+  padding: 1rem;
+  display: none;
+  z-index: 100;
+}
+.user-menu-popup.visible {
+  display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+.user-menu-popup .user-info {
+  height: 60px;
+  margin-bottom: 0.75rem;
+  background: #f5f5f5;
+  border-radius: 0.25rem;
+}
+.user-menu-popup .menu-section h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+.user-menu-popup .menu-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.user-menu-popup .menu-section li + li {
+  margin-top: 0.5rem;
+}
+.user-menu-popup .menu-section a {
+  text-decoration: none;
+  color: #007BFF;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.user-menu-popup .menu-section a:hover {
+  color: #0056b3;
+}
+
+#user-profile {
+  background: #f9f9f9;
+  padding: 1em;
+  border-radius: 8px;
+  font-size: 0.9em;
+  color: #1a3a5b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+.easy-links {
+  margin-top: 0.5em;
+  font-size: 0.9em;
+  color: #13455D;
+  text-align: center;
+}
+
+.easy-links a {
+  color: #13455D;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.easy-links a:hover {
+  color: #0f374a;
+}
+
+.user-menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.user-menu button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #13455D;
+}
+
+/* Fullscreen Modal Styling */
+.settings-panel {
+  background: #fff;
+  color: #1a1a1a;
+  width: 90%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #333;
+}
+
+.settings-section {
+  margin-top: 2rem;
+}
+.settings-section h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.3rem;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.avatar-circle {
+  background: #5078f2;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+.user-fullname {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.user-email {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.field-group {
+  margin-bottom: 1rem;
+}
+.field-group label {
+  font-size: 0.85rem;
+  color: #555;
+}
+.field-group p {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+}
+
+.sub-text {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.link-list {
+  list-style: none;
+  padding-left: 0;
+}
+.link-list li {
+  margin-bottom: 0.5rem;
+}
+.link-list a {
+  text-decoration: none;
+  color: #007BFF;
+  font-size: 0.9rem;
+}
+.link-list a:hover {
+  text-decoration: underline;
+}
+
+.logout-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+.logout-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background: #d32f2f;
+}
+
+.typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-style: italic;
+  opacity: 0.7;
+  margin: 0.5em 0;
+}
+
+.typing .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #13455D;
+  animation: blink 1.2s infinite ease-in-out;
+}
+
+.typing .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+body.initializing .overlay,
+body.initializing .dashboard {
+  display: none !important;
+}
+
+/* Lock page scroll when modal is open */
+body.no-scroll { overflow: hidden; }
+
+:root{
+  --brand:#13455D;
+  --brand-600:#0f374a;
+  --accent:#2b6ff9;       /* PI+ button */
+  --light-bg:#f7fbfc;      /* modal body */
+  --free-bg:#eaf3ff;       /* light blue */
+  --free-stroke:#cfe2ff;
+  --plus-bg:#1d3b66;       /* dark blue */
+  --plus-stroke:#274a7a;
+  --ink:#13455D;
+  --ink-weak:#5a7286;
+  --ink-invert:#ffffff;
+  --muted-bg: #f7fbfc;        /* page/panel bg */
+  --muted-2: #f0f6f9;         /* light surfaces */
+  --card: #ffffff;
+  --card-border: #cfe2ff;
+  --text: #13455D;
+  --text-muted: #627d98;
+}
+
+/* Modal shell (light) */
+.plan-modal{ position:fixed; inset:0; z-index:2000; display:none; }
+.plan-modal.open{ display:block; }
+.plan-modal__backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); }
+.plan-modal__content.plan-modal--light{
+  position:relative; width:100vw; height:100vh;
+  background:var(--light-bg); color:var(--ink);
+  display:flex; flex-direction:column;
+  padding:28px clamp(16px,3vw,36px);
+}
+.plan-modal__close{ position:absolute; top:14px; right:16px; background:transparent; border:0; color:#7b8da0; font-size:28px; cursor:pointer; }
+
+/* Title */
+.plan-heading{ text-align:center; font-size:28px; font-weight:800; margin:4px 0 22px; color:var(--ink); }
+
+/* Grid */
+.plans--two{ 
+  display:grid; 
+  grid-template-columns: repeat(2, 420px);
+  justify-content: center;
+  gap:18px; flex:1; 
+  overflow:auto; 
+  padding-right:6px; }
+
+@media (max-width:900px){ .plans--two{ grid-template-columns:1fr; } }
+
+/* Tiles */
+.plan{
+  border-radius:16px; padding:18px;
+  border:1px solid var(--free-stroke);
+  background:#fff;
+}
+.plan--free{ background:var(--free-bg); border-color:var(--free-stroke); color:var(--ink); }
+.plan--plus{ background:var(--brand); border-color:var(--plus-stroke); color:var(--ink-invert); }
+
+/* Header layout */
+.plan__header{ display:flex; flex-direction:column; gap:8px; }
+.plan__title-row{ display:flex; align-items:center; gap:10px; justify-content:space-between; }
+
+/* FREE / PI+ as big as price */
+.plan__title{
+  font-size: clamp(15px, 2vw, 40px);
+  font-weight: 900; letter-spacing:-0.02em; line-height:1;
+  margin: 0;
+}
+
+/* Price block */
+.plan__price{ display:flex; align-items:baseline; gap:10px; margin-top:4px; }
+.price__currency{ font-size: clamp(20px, 4vw, 44px); line-height:1; font-weight:900; letter-spacing:-0.02em; }
+.price__amount{ font-size: clamp(20px, 4vw, 44px); line-height:1; font-weight:900; letter-spacing:-0.02em; }
+.price__period{ font-size:14px; opacity:.8; }
+
+/* Hook under price */
+.plan__hook{ margin:4px 0 6px; font-size:14px; opacity:.9; }
+
+/* Compact buttons under hook */
+.btn{ border:1px solid rgba(0,0,0,.12); border-radius:10px; font-weight:800; cursor:pointer; }
+.btn-compact{ display:inline-block; padding:8px 14px; font-size:14px; }
+.btn-outline{ background:transparent; color:var(--brand); border-color:rgba(19,69,93,.35); }
+.btn-outline:disabled{ opacity:.6; cursor:not-allowed; }
+.btn-primary{ background:var(--accent); color:#fff; border-color:transparent; }
+.btn-primary:hover{ filter:brightness(.95); }
+
+/* Badge (PI+) */
+.plan-badge{
+  font-size:11px; padding:4px 10px; border-radius:999px;
+  background:#2b6ff9; color:#fff; font-weight:800; letter-spacing:.02em;
+}
+
+/* Features with icons */
+.plan__features{ list-style:none; padding:10px 0 0 0; margin:10px 0 0; border-top:1px solid rgba(0,0,0,.08); }
+.plan--plus .plan__features{ border-top:1px solid rgba(255,255,255,.15); }
+.plan__features li{ display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(0,0,0,.06); }
+.plan--plus .plan__features li{ border-bottom:1px solid rgba(255,255,255,.08); }
+.plan__features li:last-child{ border-bottom:none; }
+.i{ width:18px; height:18px; }
+
+/* Fineprint */
+.fineprint{ text-align:center; margin-top:14px; font-size:12px; color:var(--ink-weak); }
+.fineprint a{ color:var(--brand); text-decoration:underline; }
+
+/* Remove any animations on tiles */
+.plans--two *{ animation:none!important; transition:none!important; }
+
+/* =========================================
+   SUBSCRIPTION TILE (in Settings)
+   – stays consistent with brand
+========================================= */
+.pi-card{
+  background: var(--muted-2);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px; margin-top: 12px;
+}
+.pi-card__head{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.pi-badge{
+  background: var(--accent); color:#fff; font-weight:800;
+  padding: 4px 10px; border-radius: 999px; font-size: 12px; letter-spacing:.2px;
+}
+.pi-renew{ color: var(--text); font-size: 14px; opacity:.9; }
+.pi-features{ margin: 8px 0 0 0; padding-left:18px; line-height:1.55; }
+.billing-row{ margin-top:12px; }
+.billing-row a{ color: var(--accent); text-decoration: underline; font-weight:600; }
+
+
+
+/* ===== Limit Toast (updated layout) ===== */
+#limit-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(16px);
+  width: calc(100% - 32px);
+  max-width: 720px;
+  display: none;
+  align-items: center;                 /* keep items on one line */
+  justify-content: flex-start;         /* text at left, rest flows right */
+  gap: 10px;
+
+  background: #13455D;                 /* dark slate */
+  color: #e5e7eb;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.45);
+  z-index: 9999;
+  animation: toast-in .22s ease-out forwards;
+}
+
+#limit-toast.open { display: flex; }
+
+#limit-toast .toast-text {
+  flex: 1;                             /* take remaining space on the left */
+  line-height: 1.45;
+  font-size: 15px;
+}
+
+/* Center the text inside the Get PI+ button */
+#limit-toast .toast-cta{
+  display: inline-flex;               /* lay out content on a flex row */
+  align-items: center;                /* vertical centering */
+  justify-content: center;            /* horizontal centering */
+  padding: 8px 14px;
+  height: 36px;                       /* or 40px if you prefer taller */
+  line-height: 1;                     /* prevent baseline pushing text down */
+  vertical-align: middle;             /* avoid baseline alignment quirks */
+  font-weight: 700;
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,.6);
+  background: #007BFF;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  -webkit-appearance: none;           /* Safari */
+  appearance: none;
+}
+
+#limit-toast .toast-cta:focus{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(43,108,255,.35);
+}
+
+
+#limit-toast .toast-close {
+  margin-left: 6px;
+  background: transparent;
+  border: 0;
+  color: #9ca3af;
+  font-size: 20px;
+  height: 32px;
+  width: 32px;
+  line-height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+#limit-toast .toast-close:hover { color: #e5e7eb; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(24px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes toast-out {
+  to   { opacity: 0; transform: translateX(-50%) translateY(24px); }
+}
+
+@media (min-width: 768px) { #limit-toast { width: 640px; } }
+
+
+/* ── Sidebar brand/logo ─────────────────────────────────────────────── */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .75rem 0 1rem;
+  border-bottom: 1px solid #e5eef3;
+  margin-bottom: .75rem;
+}
+.sidebar-brand img {
+  max-width: 300px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.02));
+}
+
+/* Sidebar: remove top padding entirely */
+.sidebar{
+  padding: 0 12px 12px !important;   /* was 1em top; now 0 */
+  gap: 10px;                          /* keeps space after the logo tidy */
+}
+
+/* Brand row: no extra air, align left */
+.sidebar-brand{
+  margin-left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #e8eef4;
+  padding: -1 !important;              /* no internal padding */
+  margin: -1 !important;               /* no external margin */
+}
+
+/* Logo: smaller, crisp */
+.sidebar-brand img{
+  padding: 0 !important;              /* no internal padding */
+  margin: 0 !important;               /* no external margin */
+  max-width: 128px;                   /* tweak to taste (100–128px works well) */
+  height: auto;
+  display: block;                     /* removes stray whitespace under images */
+}
+
+/* ── Buttons & groups ───────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .65rem .9rem;
+  border: 1px solid #cbd6dd;
+  border-radius: 10px;
+  background: #fff;
+  color: #13455D;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .06s ease;
+}
+.btn:hover { background: #f2f8fc; border-color: #b7c7d3; }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: #13455D;
+  color: #fff;
+  border-color: #13455D;
+}
+.btn-primary:hover { background: #0f374a; }
+
+/* ── Section titles with icons ──────────────────────────────────────── */
+.sidebar-group { margin-top: .5rem; }
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: .5rem 0 .4rem;
+  font-size: .9rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #627d98;
+}
+.section-title .section-icon {
+  flex: 0 0 auto;
+}
+
+/* ── Inputs & lists (slight refresh) ───────────────────────────────── */
+.sidebar select {
+  width: 100%;
+  padding: .6rem .7rem;
+  border: 1px solid #cbd6dd;
+  border-radius: 10px;
+  background: #fff;
+  color: #13455D;
+}
+#chat-list {
+  list-style: none;
+  padding: 0;
+  margin: .25rem 0 1rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+#chat-list li {
+  padding: .55rem .8rem;
+  border-radius: 10px;
+  transition: background .15s ease, color .15s ease;
+}
+#chat-list li:hover { background: #eaf4ff; color: #0f2a4f; }
+#chat-list li.active { background: #d7e7ff; color: #0f2a4f; }
+
+/* ── User chip & menu items ────────────────────────────────────────── */
+.user-chip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: #fff;
+  border: 1px solid #cbd6dd;
+  border-radius: 999px;
+  padding: .4rem .6rem;
+  justify-content: space-between;
+}
+.user-chip .avatar-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #d7e7ff; color: #0f2a4f; font-weight: 700;
+  font-size: .85rem;
+}
+.user-menu-popup {
+  width: 100%;
+  left: 0; transform: none; /* override absolute centering */
+  bottom: calc(100% + .5rem);
+  border-radius: 12px;
+  border: 1px solid #e0e7ee;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+.user-menu-popup .menu-item {
+  width: 100%;
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .75rem;
+  background: #fff;
+  border: none; border-bottom: 1px solid #f2f4f7;
+  cursor: pointer; text-align: left; font-weight: 500; color: #13455D;
+}
+.user-menu-popup .menu-item:last-child { border-bottom: none; }
+.user-menu-popup .menu-item:hover { background: #f7fbff; }
+
+
+/* Sidebar user menu – stable positioning + safe animation */
+.user-menu { position: relative; }
+
+.user-menu-popup{
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 8px;               /* keep a little breathing room */
+  right: 8px;              /* stretch to sidebar width */
+  width: auto;             /* override fixed 220px */
+  max-width: none;
+  margin: 0;
+  transform: none;         /* kill translateX(-50%) */
+}
+
+
+/* style.css – put near your sidebar inputs section */
+.sidebar button,
+.sidebar select,
+.sidebar option,
+.section-title,
+.user-name {
+  font-family: 'Manrope', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-weight: 500; /* tweak if you prefer 500 */
+}
+
+
+/* replace the old fadeIn for this element (no X translation) */
+@keyframes popInY {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.user-menu-popup.visible{
+  display: block;
+  animation: popInY .18s ease-out;
+  will-change: opacity, transform;
+}
+
+/* -------- Floating composer (minimal) -------- */
+
+/* Remove the old footer bar look */
+.input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 16px 24px !important;      /* breathing room from edges */
+}
+
+/* The pill itself */
+.input-area .composer{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 980px;                    /* keeps it elegant on wide screens */
+  margin: 0 auto;                      /* center in the chat */
+  padding: 12px 12px 12px 16px;
+  border-radius: 999px;
+  background: #ffffff;                 /* pill floats on the chat bg */
+  border: 1px solid #e6edf4;
+  box-shadow:
+    0 8px 24px rgba(18, 52, 77, 0.10),
+    0 2px 6px rgba(18, 52, 77, 0.06);
+}
+
+.input-area .composer:focus-within{
+  border-color: #b3ccff;
+  box-shadow:
+    0 0 0 3px rgba(179, 204, 255, .35),
+    0 10px 28px rgba(18, 52, 77, 0.12);
+}
+
+/* Textarea: transparent inside the pill, auto-grow */
+#user-input{
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;                          /* pill handles padding */
+  font-size: 1rem;
+  line-height: 1.4;
+  max-height: 9rem;                    /* gentle cap on expansion */
+  resize: none;
+}
+
+/* Send button: circular, subtle, icon-only */
+#send{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: #13455D;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .08s ease, background .2s ease, box-shadow .2s ease;
+}
+
+#send:hover{ background:#0f374a; box-shadow: 0 2px 10px rgba(19, 69, 93, .25); }
+#send:active{ transform: translateY(1px); }
+
+/* Hide the text label but keep it accessible */
+.sr-only{
+  position:absolute!important; width:1px;height:1px; padding:0;margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap;border:0;
+}
+
+/* We no longer need extra padding at the bottom of the chat */
+.chat{ padding-bottom: 16px !important; }  /* was added for fixed footer; keep it slim */
+
+/* Make the page under the composer the SAME color as the chat */
+.main-panel { background: #f7fbfc !important; }  /* matches .chat bg */
+
+/* Kill any legacy footer bar styling so only the pill shows */
+.input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 16px 24px !important;   /* gentle spacing from edges */
+}
+
+/* Keep a little room so the composer doesn't hug the edge */
+.chat { padding-bottom: 16px !important; }
+
+/* Set a comfortable fixed height for the textarea WHEN EMPTY */
+:root { --pi-composer-empty-h: 40px; }   /* tweak 36–44px to taste */
+
+/* Keep the pill tall enough to look airy */
+.input-area .composer{
+  min-height: 64px;                       /* pill height (12px top + 40 + 12px bottom) */
+  align-items: center;       
+  padding-bottom: 18px !important;            /* centers the textarea block in the pill */
+}
+
+/* Normal typing */
+#user-input{
+  line-height: 1.4;                        /* regular line-height when typing */
+  padding: 0;                              /* pill handles vertical padding */
+}
+
+/* Vertically center the placeholder ONLY while empty */
+#user-input:placeholder-shown{
+  height: var(--pi-composer-empty-h);
+  line-height: var(--pi-composer-empty-h); /* centers placeholder inside the box */
+}
+
+/* Make sure the send icon is dead-center in the circle */
+#send{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 0;
+}
+#send svg{ width: 18px; height: 18px; display: block; }
+
+/* A) Kill the textarea's inner box, let the outer pill be the only shape */
+.input-area textarea#user-input{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;      /* no inner rounded corners */
+  line-height: 1.45;
+  max-height: 9rem;                 /* keep auto-grow reasonable */
+  overflow-y: auto;                  /* scroll when max reached */
+}
+
+/* B) Keep text away from bottom curve when typing */
+.input-area textarea#user-input{
+  padding: 8px 12px 16px !important; /* <-- extra bottom pad prevents collision */
+}
+
+/* Keep placeholder vertically centered ONLY when empty */
+:root { --pi-composer-empty-h: 40px; }
+.input-area textarea#user-input:placeholder-shown{
+  padding: 0 !important;                   /* remove pad so centering works */
+  height: var(--pi-composer-empty-h);
+  line-height: var(--pi-composer-empty-h); /* perfect vertical centering */
+}
+
+/* -------- HERO (first-load) -------- */
+.hero-welcome {
+  text-align: center;
+  margin: 0 auto 1.5rem;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 40px);
+  color: #1a3a5b;
+}
+.hidden { display: none !important; }
+
+/* When hero mode is on, center the content vertically */
+.main-panel.hero-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;     /* center vertically */
+  min-height: calc(100vh - 72px); /* minus header height */
+}
+
+/* Hide the scrolling chat while hero is visible */
+.main-panel.hero-mode #chat,
+.main-panel.hero-mode #tagline,
+.main-panel.hero-mode #tagline-si {
+  display: none;
+}
+
+/* Make the composer float in the middle and look like a single pill */
+.main-panel.hero-mode .input-area{
+  position: static !important;     /* override fixed-at-bottom rules */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: min(920px, 92vw);
+  margin: 1rem auto 0;
+  padding: 0;                       /* composer pill has its own padding */
+}
+
+/* The pill itself */
+.main-panel.hero-mode .input-area textarea{
+  border-radius: 999px;
+  padding: 1.1rem 1.25rem;
+}
+
+/* Keep the bottom-fixed composer for normal chat view (already in file).
+   No change needed there. */
+
+/* Sinhala typography tweaks if you want them */
+.main-panel.lang-si .hero-welcome {
+  letter-spacing: 0;
+  /* If you ship a Sinhala font, add it first: */
+  /* font-family: 'Noto Sans Sinhala', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; */
+}
+
+/* --- Stop centering the entire main panel in hero mode --- */
+.main-panel.hero-mode{
+  display: block !important;        /* undo the flex */
+  min-height: auto !important;
+}
+
+/* --- Center only the hero content vertically --- */
+:root { --app-header-h: 72px; }     /* adjust if your header is taller/shorter */
+
+.main-panel.hero-mode #hero{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* fill the viewport minus the header and a bit of space for the pill */
+  min-height: calc(100vh - var(--app-header-h) - 180px);
+  margin: 0 auto 0;
+}
+
+/* Keep the composer as a centered pill, but don't affect the header */
+.main-panel.hero-mode .input-area{
+  position: static !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  width: min(920px, 92vw);
+  margin: 1.25rem auto 0;
+  padding: 0;
+}
+
+/* Hide chat while in hero mode (optional: hide taglines too if you want) */
+.main-panel.hero-mode #chat{ display:none; }
+/* .main-panel.hero-mode #tagline,
+.main-panel.hero-mode #tagline-si{ display:none; } */
+
+
+
+/* Sidebar surface: gentle vertical gradient and inner edge */
+.sidebar{
+  background: linear-gradient(180deg, #f9fcff 0%, #f1f7ff 100%);
+  border-right: 1px solid var(--free-stroke);
+  box-shadow: inset -1px 0 0 rgba(19,69,93,.04), 2px 0 24px rgba(19,69,93,.04);
+}
+
+/* --- Mobile fixed header + composer spacers ------------------------------ */
+:root {
+  --mobile-header-h: 56px;     /* adjust to your header’s actual height */
+  --composer-h: 64px;          /* approx. input-area height */
+}
+
+@media (max-width: 768px) {
+  /* Keep the viewport height stable even with browser bars */
+  .main-panel {
+    min-height: 100dvh;
+    /* optional: if content siblings need offset */
+    /* padding-top: var(--mobile-header-h); */
+  }
+
+  /* Fix header to the top on mobile */
+  .app-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1001;            /* above the input-area (which is 1000) */
+  }
+
+  /* Your input-area is already fixed bottom on mobile; we just normalize sizes */
+  .input-area {
+    height: var(--composer-h);
+    padding-bottom: max(env(safe-area-inset-bottom), 8px);
+  }
+
+  /* Make sure chat never sits behind the header or the composer */
+  .chat {
+    padding-top: var(--mobile-header-h);
+    padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 768px) {
+  .main-panel.hero-mode .input-area{
+    position: fixed !important;
+    bottom: 0; left: 0; right: 0;
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid #e0e7ee;
+    height: var(--composer-h);
+  }
+  /* Make the hero fill the space between header and composer */
+  .main-panel.hero-mode #hero{
+    min-height: calc(100dvh - var(--mobile-header-h) - var(--composer-h));
+  }
+}
+
+/* --- Mobile: keep composer pinned no matter what --- */
+:root{
+  /* tune if your header/composer heights differ */
+  --pi-header-h: 56px;
+  --pi-composer-h: 72px;
+}
+
+@media (max-width: 768px) {
+  /* Prevent the document from scrolling; let the chat area scroll */
+  html, body { height: 100dvh; overflow: hidden; }
+  .dashboard, .main-panel { height: 100%; }
+
+  /* Pin the composer to the viewport bottom, always */
+  .input-area{
+    position: fixed !important;
+    left: 0; right: 0;
+    bottom: env(safe-area-inset-bottom, 0);
+    width: 100%;
+    z-index: 1000;
+    /* a little extra padding for iOS home indicator */
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+    background: #fff; /* or your existing background */
+  }
+
+  /* Ensure hero mode can’t un-pin the composer on mobile */
+  .main-panel.hero-mode .input-area{
+    position: fixed !important;
+    left: 0; right: 0;
+    bottom: env(safe-area-inset-bottom, 0);
+    width: 100%;
+  }
+
+  /* Make the chat the only scrollable region between header and composer */
+  .chat{
+    /* if your header is visible above the chat (it is): */
+    height: calc(100dvh - var(--pi-header-h) - var(--pi-composer-h));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* room so last message isn't hidden behind the composer */
+    padding-bottom: calc(var(--pi-composer-h) + 16px + env(safe-area-inset-bottom, 0));
+  }
+}
+
+@media (min-width: 769px) {
+  .main-panel.hero-mode .input-area{
+    position: static !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    width: min(920px, 92vw);
+    margin: 1.25rem auto 0;
+    padding: 0;
+  }
+}
+
+.chat { padding-bottom: 16px !important; }
+
+/* CSS */
+:root { --composer-h: 88px; }
+@media (max-width: 768px) {
+  .chat { padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom)); }
+}
+
+/* Keep the hero subtitle tiny and tight beneath the title */
+.hero-welcome h1{
+  margin: 0; /* kill default h1 bottom margin for a tight stack */
+}
+
+.hero-sub{
+  margin-top: 4px;                 /* very small gap */
+  font-weight: 500;
+  font-size: clamp(12px, 1.4vw, 13px);  /* much smaller than the big title */
+  line-height: 1.35;
+  color: #355a74;                  /* softer than the title */
+  max-width: 44ch;
+  margin-left: auto; margin-right: auto; /* center under the title */
+}
+
+/* Tiny subtitle right beneath "Hi, {name}!" */
+.hero-welcome h1{ 
+  margin: 0;                   /* remove default h1 gap */
+}
+
+.hero-welcome{ 
+  text-align: center;          /* keep both lines centered */
+}
+
+.hero-sub{
+  margin: 4px auto 0;          /* very small gap under the H1 */
+  font-weight: 500;
+  font-size: clamp(12px, 1.2vw, 13px);
+  line-height: 1.35;
+  color: #355a74;
+  max-width: 44ch;             /* keep it readable on wide screens */
+}
+
+/* Optional: make the gap foolproof even if margins change */
+.main-panel.hero-mode #hero{
+  gap: 4px;                    /* stacks H1 + subtitle with a tight gap */
+}
+
+
+/* Hero title + tiny subtitle */
+#hero-title{
+  margin: 0;                    /* kill default h1 margin */
+  font-weight: 800;
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.hero-sub{
+  margin: 6px auto 0;           /* small gap below the title */
+  font-size: clamp(16px, 4vw, 18px);
+  line-height: 1.4;
+  font-weight: 500;
+  color: #3a6177;               /* softer than the title */
+  max-width: 48ch;              /* comfortable width for 2–3 lines */
+  text-align: center;
+  text-wrap: balance;           /* nicer line breaks on modern browsers */
+  opacity: .9;
+  font-weight: 500;
+
+}
+
+/* subtle entrance */
+.hero-welcome > *{ animation: heroFadeUp .35s ease both; }
+#hero-title { animation-delay: .02s; }
+.hero-sub   { animation-delay: .12s; }
+
+@keyframes heroFadeUp{
+  from{ opacity: 0; transform: translateY(4px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
+
+:root {
+  --composer-h: 80px; /* initial; JS will keep it accurate */
+}
+
+@media (max-width: 768px) {
+  /* Pin composer and account for iOS home indicator */
+  .input-area{
+    position: fixed !important;
+    left: 0; right: 0;
+    bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    width: 100%;
+  }
+
+  /* Reserve exactly the composer’s height at the bottom of the chat */
+  .chat{
+    /* lets wheel/keyboard scroll to visible end correctly */
+    padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+    scroll-padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom));
+  }
+
+  /* Extra safety: an invisible spacer that’s always as tall as the composer */
+  .chat::after{
+    content: "";
+    display: block;
+    height: calc(var(--composer-h) + env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+}
+
+:root { --composer-h: 88px; } /* sensible default */
+
+.chat{
+  /* leave room equal to the actual composer height */
+  padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px)) !important;
+  /* when we scrollIntoView(), keep content above the pill */
+  scroll-padding-bottom: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* extra invisible block at the very end of the chat so nothing can go under */
+.chat::after{
+  content: "";
+  display: block;
+  height: calc(var(--composer-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* make sure the pill truly overlays other content */
+.input-area{ z-index: 1000; }
