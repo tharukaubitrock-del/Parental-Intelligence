@@ -3,16 +3,27 @@ require('dotenv').config();
 const crypto = require('crypto');
 const admin  = require('firebase-admin');
 
+function cleanEnv(value) {
+  if (!value) return value;
+  let cleaned = String(value).trim();
+  if (
+    (cleaned.startsWith('"') && cleaned.endsWith('"')) ||
+    (cleaned.startsWith("'") && cleaned.endsWith("'"))
+  ) {
+    cleaned = cleaned.slice(1, -1).trim();
+  }
+  return cleaned;
+}
+
 // Service account from Netlify env (supports BASE64 or raw JSON)
 function loadSA() {
-  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  const b64 = cleanEnv(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64);
   if (b64) {
     return JSON.parse(Buffer.from(b64, 'base64').toString('utf8'));
   }
 
-  let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  let raw = cleanEnv(process.env.FIREBASE_SERVICE_ACCOUNT);
   if (raw) {
-    if (raw.startsWith('"') && raw.endsWith('"')) raw = raw.slice(1, -1);
     raw = raw.replace(/\\"/g, '"');
 
     const sa = JSON.parse(raw);
@@ -20,9 +31,9 @@ function loadSA() {
     return sa;
   }
 
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-  const projectId = process.env.FIREBASE_PROJECT_ID ||
+  const clientEmail = cleanEnv(process.env.FIREBASE_CLIENT_EMAIL);
+  let privateKey = cleanEnv(process.env.FIREBASE_PRIVATE_KEY);
+  const projectId = cleanEnv(process.env.FIREBASE_PROJECT_ID) ||
     (clientEmail && clientEmail.includes('@')
       ? clientEmail.split('@')[1].replace('.iam.gserviceaccount.com', '')
       : '');
