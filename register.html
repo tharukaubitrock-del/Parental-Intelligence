@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Register – PI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0b1f2c" media="(prefers-color-scheme: dark)">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -66,13 +66,29 @@
       margin-bottom: 15px;
     }
 
+    @media (max-width: 768px) {
+      .overlay {
+        padding: 1rem;
+        align-items: flex-start;
+        overflow-y: auto;
+      }
+
+      .card {
+        margin: auto;
+      }
+
+      .small-text {
+        line-height: 1.5;
+      }
+    }
+
   </style>
 </head>
 <body>
   <div class="overlay">
     <div class="card">
       <div class ="login-logo">
-        <img class = login-logo src="/img/logo-text.png" alt="PI Logo" width="200" height="auto" />
+        <img class="login-logo" src="/img/logo-text.png" alt="PI Logo" width="200" height="auto" />
       </div>
       <h2>Create Your PI Account</h2>
       <div class="privacy">Join us and start your parenting journey.</div>

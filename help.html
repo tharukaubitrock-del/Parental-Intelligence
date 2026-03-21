@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>PI – Help Centre</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <!-- Light & dark versions -->
   <link rel="icon" href="/img/favicon-light.png" type="image/svg+xml" sizes="any" media="(prefers-color-scheme: light)">
   <link rel="icon" href="/img/favicon-dark.png"  type="image/svg+xml" sizes="any" media="(prefers-color-scheme: dark)">
@@ -14,166 +13,511 @@
   <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon-48.png">
   <style>
     :root {
-      --header-height: 60px;
-      --mobile-header-height: 80px;
+      --header-height: 84px;
+      --page-gutter: 1.25rem;
+      --container-width: 980px;
+      --surface: #ffffff;
+      --surface-tint: #f3f9fc;
+      --surface-tint-strong: #e3f0f6;
+      --border-soft: rgba(19, 69, 93, 0.08);
+      --text-strong: #0f2f40;
+      --text-muted: #446172;
     }
-    html, body {
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
+      min-height: 100%;
     }
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      padding-top: calc(var(--header-height) + 1rem);
       font-family: 'Manrope', sans-serif;
+      line-height: 1.6;
       background: #f9fbfc;
       color: #13455D;
-      padding-top: var(--header-height);
-      line-height: 1.6;
     }
-    header {
+
+    .policy-header {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: var(--header-height);
-      background: #13455D;
-      color: #fff;
+      inset: 0 0 auto 0;
+      min-height: var(--header-height);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 1rem;
+      justify-content: flex-start;
+      padding: 0.85rem var(--page-gutter);
+      background: #13455D;
+      color: #fff;
+      text-align: left;
+      box-shadow: 0 2px 12px rgba(19, 69, 93, 0.12);
       z-index: 1000;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    header h1 { margin: 0; font-size: 1.5rem; }
-    header span { font-size: 0.85em; }
+
+    .policy-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+
+    .policy-brand img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .policy-header h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+      line-height: 1.05;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
     .container {
+      width: min(calc(100% - (var(--page-gutter) * 2)), var(--container-width));
+      margin: 0 auto 2rem;
+      padding-top: 1.5rem;
       flex: 1;
-      margin: 2rem auto;
-      max-width: 800px;
-      padding: 0 1rem;
-      width: 100%;
-      box-sizing: border-box;
     }
+
+    .help-intro {
+      margin: 0 0 clamp(1.75rem, 4vw, 2.75rem);
+      padding-top: 0.25rem;
+      text-align: center;
+    }
+
+    .help-intro h2 {
+      margin: 0;
+      color: #13455D;
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      line-height: 0.98;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+    }
+
     .contact-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1rem, 2vw, 1.5rem);
+      margin-bottom: clamp(2rem, 5vw, 3rem);
     }
+
     .card {
-      background: #fff;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.9rem;
+      padding: 1.35rem 1.15rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 14px 32px rgba(19, 69, 93, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px rgba(19, 69, 93, 0.12);
+    }
+
+    .card-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 18px;
+      position: relative;
+      overflow: hidden;
+      line-height: 0;
+      background: linear-gradient(180deg, var(--surface-tint) 0%, var(--surface-tint-strong) 100%);
+      color: #13455D;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 8px 18px rgba(19, 69, 93, 0.08);
+    }
+
+    .card-icon svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      stroke-width: 1.9;
+      display: block;
+      transform: translate(-50%, -50%);
+    }
+
+    .card-icon--mail svg {
+      width: 1.55rem;
+      height: 1.55rem;
+    }
+
+    .card-icon--phone svg {
+      width: 1.4rem;
+      height: 1.4rem;
+      transform: translate(calc(-50% - 1px), calc(-50% - 1px));
+    }
+
+    .card-icon--pin svg {
+      width: 1.3rem;
+      height: 1.3rem;
+      transform: translate(-50%, calc(-50% - 2px));
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.15rem, 1rem + 0.35vw, 1.35rem);
+      line-height: 1.2;
+      color: var(--text-strong);
     }
 
     .card p {
-    margin: 0;
-    word-break: break-word;       /* allow the email to wrap */
-    white-space: normal;          /* ensure wrapping at @ and . */
-    text-align: center;           /* if you want it centered in the tile */
+      margin: 0;
+      color: var(--text-muted);
+      font-size: clamp(1rem, 0.95rem + 0.2vw, 1.1rem);
+      word-break: break-word;
+      white-space: normal;
     }
-    .card:hover { transform: translateY(-4px); }
-    .card h3 { margin-top: 0; font-size: 1.1rem; }
+
+    .card a {
+      color: #13455D;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+
+    .faq-list {
+      margin-top: 0;
+    }
+
+    .faq-list > h2 {
+      margin: 0 0 1rem;
+      color: #13455D;
+      font-size: clamp(1.55rem, 3.5vw, 2.1rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
     .faq-item {
-      background: #fff;
-      border-radius: 8px;
-      margin-bottom: 1rem;
+      margin-bottom: 0.9rem;
       overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(19, 69, 93, 0.05);
     }
+
     .faq-question {
-      padding: 1rem;
+      width: 100%;
+      padding: 1.05rem 3.25rem 1.05rem 1.15rem;
+      border: 0;
+      background: transparent;
+      color: var(--text-strong);
+      text-align: left;
+      font: inherit;
+      font-weight: 600;
       cursor: pointer;
       position: relative;
     }
+
     .faq-question::after {
       content: '+';
       position: absolute;
-      right: 1rem;
+      right: 1.1rem;
       top: 50%;
       transform: translateY(-50%);
       font-size: 1.2rem;
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
-    .faq-question.active::after { transform: translateY(-50%) rotate(45deg); }
+
+    .faq-question.active::after {
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    .faq-question:focus-visible {
+      outline: 2px solid rgba(19, 69, 93, 0.35);
+      outline-offset: -2px;
+    }
+
     .faq-answer {
       max-height: 0;
-      padding: 0 1rem;
-      transition: max-height 0.3s ease, padding 0.3s ease;
+      overflow: hidden;
+      padding: 0 1.15rem;
+      transition: max-height 0.32s ease, padding 0.32s ease;
     }
+
     .faq-answer.open {
-      padding: 1rem;
-      max-height: 200px;
+      padding: 0 1.15rem 1rem;
     }
+
+    .faq-answer p {
+      margin: 0;
+      color: var(--text-muted);
+    }
+
     footer {
+      margin-top: auto;
+      padding: 1.5rem var(--page-gutter) calc(1.5rem + env(safe-area-inset-bottom));
       background: #f0f6f9;
-      border-top: 1px solid #ccc;
+      border-top: 1px solid #d6e2e8;
       text-align: center;
-      padding: 1.5em 1em;
       font-size: clamp(0.9rem, 2vw, 1rem);
       color: #13455D;
-      margin-top: auto;
     }
-    a.back-link {
-      color: #13455D;
-      text-decoration: none;
-      font-weight: 500;
+
+    @media (max-width: 1024px) {
+      :root {
+        --header-height: 80px;
+        --container-width: 860px;
+      }
+
+      .container {
+        padding-top: 1.1rem;
+      }
+
+      .help-intro h2 {
+        font-size: clamp(2.5rem, 8vw, 3.7rem);
+      }
+
+      .contact-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .contact-cards .card:last-child {
+        grid-column: 1 / -1;
+        width: min(100%, 360px);
+        justify-self: center;
+      }
+
+      .card {
+        min-height: 220px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --header-height: 74px;
+        --page-gutter: 1rem;
+      }
+
+      body {
+        padding-top: calc(var(--header-height) + 0.75rem);
+      }
+
+      .policy-brand {
+        gap: 0.7rem;
+      }
+
+      .policy-brand img {
+        width: 44px;
+        height: 44px;
+      }
+
+      .policy-header h1 {
+        font-size: 1.18rem;
+      }
+
+      .container {
+        padding-top: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .help-intro {
+        margin-bottom: 1.5rem;
+      }
+
+      .help-intro h2 {
+        font-size: clamp(2rem, 12vw, 2.7rem);
+        line-height: 1.02;
+      }
+
+      .contact-cards {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        margin-bottom: 2rem;
+      }
+
+      .contact-cards .card:last-child {
+        grid-column: auto;
+        width: 100%;
+      }
+
+      .card {
+        min-height: 0;
+        padding: 1.1rem 1rem;
+        border-radius: 18px;
+      }
+
+      .card-icon {
+        width: 3.1rem;
+        height: 3.1rem;
+        border-radius: 16px;
+      }
+
+      .card h3 {
+        font-size: 1.08rem;
+      }
+
+      .card p {
+        font-size: 1rem;
+      }
+
+      .faq-list > h2 {
+        margin-bottom: 0.85rem;
+        font-size: clamp(1.4rem, 7vw, 1.8rem);
+      }
+
+      .faq-question {
+        padding: 1rem 3rem 1rem 1rem;
+        font-size: 0.98rem;
+      }
+
+      .faq-question::after {
+        right: 1rem;
+      }
+
+      .faq-answer {
+        padding: 0 1rem;
+      }
+
+      .faq-answer.open {
+        padding: 0 1rem 0.95rem;
+      }
+    }
+
+    @media (max-width: 420px) {
+      :root {
+        --page-gutter: 0.875rem;
+      }
+
+      .policy-brand img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .policy-header h1 {
+        font-size: 1.05rem;
+      }
+
+      .help-intro h2 {
+        font-size: clamp(1.85rem, 12vw, 2.3rem);
+      }
+
+      .card {
+        padding: 1rem 0.95rem;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>PI</h1>
-    <span>🇱🇰 Powered by BITROCK</span>
-  </header>
-  <div class="container">
-    <section class="contact-cards">
-        <div class="card">
-          <h3>Email Us</h3>
-          <p><a href="mailto:parentalintelligencepi@gmail.com">parentalintelligencepi@gmail.com</a></p>
-        </div>
-        <div class="card">
-          <h3>Call Us</h3>
-          <p><a href="tel:+94112233445">+94 767150646</a></p>
-        </div>
-        <div class="card">
-          <h3>Visit Us</h3>
-          <p>10 Raymond Road<br/>Nugegoda, Colombo, <br/>Sri Lanka</p>
-        </div>
+	  <header class="policy-header">
+	    <div class="policy-brand">
+	      <img src="/img/logo-white.png" alt="Parental Intelligence Logo" width="56" height="56">
+	      <h1>Parental Intelligence</h1>
+	    </div>
+	  </header>
+	  <div class="container">
+	    <section class="help-intro">
+	      <h2>Help Centre</h2>
+	    </section>
+	    <section class="contact-cards">
+	        <div class="card">
+		          <div class="card-icon card-icon--mail" aria-hidden="true">
+			            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+			              <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+			              <path d="m4 7 7.1 5.33a1.5 1.5 0 0 0 1.8 0L20 7"></path>
+			            </svg>
+		          </div>
+	          <h3>Email Us</h3>
+	          <p><a href="mailto:info@chatpi.lk">info@chatpi.lk</a></p>
+	        </div>
+	        <div class="card">
+		          <div class="card-icon card-icon--phone" aria-hidden="true">
+			            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+			              <path d="M22 16.92v3a2 2 0 0 1-2.18 2A17.8 17.8 0 0 1 12.08 19a17.5 17.5 0 0 1-5.43-5.43 17.8 17.8 0 0 1-2.92-7.77A2 2 0 0 1 5.72 3.6h3a2 2 0 0 1 2 1.72l.34 2.71a2 2 0 0 1-.57 1.69l-1.22 1.22a14 14 0 0 0 4.99 4.99l1.22-1.22a2 2 0 0 1 1.69-.57l2.71.34a2 2 0 0 1 1.72 2Z"></path>
+			            </svg>
+		          </div>
+	          <h3>Call Us</h3>
+	          <p><a href="tel:+94112233445">+94 767150646</a></p>
+	        </div>
+	        <div class="card">
+		          <div class="card-icon card-icon--pin" aria-hidden="true">
+			            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+			              <path d="M12 21s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z"></path>
+			              <circle cx="12" cy="10" r="2.75"></circle>
+			            </svg>
+		          </div>
+	          <h3>Visit Us</h3>
+	          <p>10 Raymond Road<br/>Nugegoda, Colombo, <br/>Sri Lanka</p>
+	        </div>
       </section>
+      <section class="faq-list">
       <h2>Frequently Asked Questions</h2>
       <div class="faq-item">
-        <div class="faq-question">How do I reset my password?</div>
-        <div class="faq-answer"><p>Click on "Forgot Password" on the login screen, enter your email, and follow the instructions.</p></div>
+        <button class="faq-question" type="button" aria-expanded="false">How do I reset my password?</button>
+        <div class="faq-answer" aria-hidden="true"><p>Click on "Forgot Password" on the login screen, enter your email, and follow the instructions.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">How can I upgrade my subscription?</div>
-        <div class="faq-answer"><p>Go to your account settings in PI+ dashboard and select "Subscription" to view plans and upgrade.</p></div>
+        <button class="faq-question" type="button" aria-expanded="false">How can I upgrade my subscription?</button>
+        <div class="faq-answer" aria-hidden="true"><p>Go to your account settings in PI+ dashboard and select "Subscription" to view plans and upgrade.</p></div>
       </div>
       <div class="faq-item">
-        <div class="faq-question">Where can I find my chat history?</div>
-        <div class="faq-answer"><p>Your previous chats are listed in the sidebar under "Chats". Click any to resume.</p></div>
+        <button class="faq-question" type="button" aria-expanded="false">Where can I find my chat history?</button>
+        <div class="faq-answer" aria-hidden="true"><p>Your previous chats are listed in the sidebar under "Chats". Click any to resume.</p></div>
       </div>
-    </section>
+      </section>
   </div>
   <footer>
     <small>© 2025 BITROCK. Parental Intelligence is a trademark of BITROCK. All rights reserved.</small>
   </footer>
   <script>
-    document.querySelectorAll('.faq-question').forEach(q => {
-      q.addEventListener('click', () => {
-        const ans = q.nextElementSibling;
-        const isOpen = ans.classList.contains('open');
-        document.querySelectorAll('.faq-answer.open').forEach(o => o.classList.remove('open'));
-        document.querySelectorAll('.faq-question.active').forEach(a => a.classList.remove('active'));
+    const faqButtons = document.querySelectorAll('.faq-question');
+
+    function closeFaq(button, answer) {
+      button.classList.remove('active');
+      button.setAttribute('aria-expanded', 'false');
+      answer.classList.remove('open');
+      answer.setAttribute('aria-hidden', 'true');
+      answer.style.maxHeight = '0px';
+    }
+
+    function openFaq(button, answer) {
+      button.classList.add('active');
+      button.setAttribute('aria-expanded', 'true');
+      answer.classList.add('open');
+      answer.setAttribute('aria-hidden', 'false');
+      answer.style.maxHeight = `${answer.scrollHeight}px`;
+    }
+
+    faqButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const answer = button.nextElementSibling;
+        const isOpen = answer.classList.contains('open');
+
+        faqButtons.forEach(otherButton => {
+          closeFaq(otherButton, otherButton.nextElementSibling);
+        });
+
         if (!isOpen) {
-          q.classList.add('active'); ans.classList.add('open');
+          openFaq(button, answer);
         }
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.faq-answer.open').forEach(answer => {
+        answer.style.maxHeight = `${answer.scrollHeight}px`;
       });
     });
   </script>

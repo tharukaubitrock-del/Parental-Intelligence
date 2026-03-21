@@ -66,7 +66,7 @@
 
   <!-- Dashboard with sidebar (hidden until login) -->
   <div id="dashboard" class="dashboard hidden">
-    <aside class="sidebar">
+    <aside id="app-sidebar" class="sidebar">
       <!-- Brand -->
       <div class="sidebar-brand">
         <!-- Put your horizontal logo file at: /img/pi-logo-horizontal.png -->
@@ -151,7 +151,7 @@
     <div class="main-panel">
       <header class = "app-header">
         <!-- In header -->
-        <button id="menu-toggle" class="hamburger">&#9776;</button>
+        <button id="menu-toggle" class="hamburger" type="button" aria-controls="app-sidebar" aria-expanded="false">&#9776;</button>
         <h1 id="app-title">PI</h1>
         <span class="powered">
           🇱🇰 Powered by BITROCK
@@ -273,10 +273,10 @@
       <section class="settings-section">
         <h3>About</h3>
         <ul class="link-list">
-          <li><a href="/terms.html#terms" target="_blank">Terms & Conditions</a></li>
-          <li><a href="/terms.html#privacy" target="_blank">Privacy Policy</a></li>
-          <li><a href="/terms.html#refund" target="_blank">Refund Policy</a></li>
-          <li><a href="help.html" target="_blank">Help Centre</a></li>
+          <li><a href="/terms.html" target="_blank">Terms & Conditions</a></li>
+          <li><a href="/privacy-policy.html" target="_blank">Privacy Policy</a></li>
+          <li><a href="/refund-policy.html" target="_blank">Refund Policy</a></li>
+          <li><a href="/help.html" target="_blank">Help Centre</a></li>
         </ul>
       </section>
 

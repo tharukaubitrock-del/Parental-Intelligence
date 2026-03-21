@@ -101,6 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastUpgradeBtn = document.getElementById('toast-upgrade');
   const toastCloseBtn   = document.getElementById('toast-close');
 
+  const COMPACT_BREAKPOINT = 1024;
+  const isCompactViewport = () =>
+    window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT}px)`).matches;
+  const closeSidebar = () => {
+    sidebar.classList.remove('active');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+  };
+  const toggleSidebar = () => {
+    const shouldOpen = !sidebar.classList.contains('active');
+    sidebar.classList.toggle('active', shouldOpen);
+    menuToggle?.setAttribute('aria-expanded', String(shouldOpen));
+  };
+
   let unsubUserDoc = null;
   let unsubSubDoc  = null;
   let isDailyLocked = false; // ← add here
@@ -200,9 +213,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Toggle sidebar
-  menuToggle.onclick = () => {
-    sidebar.classList.toggle('active');
-  };
+  menuToggle.onclick = toggleSidebar;
+  menuToggle?.setAttribute('aria-expanded', 'false');
+  window.addEventListener('resize', () => {
+    if (!isCompactViewport()) closeSidebar();
+  });
 
   // Helpers
   function openPlanModal() {
@@ -504,8 +519,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   newChatBtn.onclick = () => {
     // Close sidebar first
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('active');
+    if (isCompactViewport()) {
+      closeSidebar();
     }
 
     // Then show the language modal
@@ -553,8 +568,8 @@ document.addEventListener('DOMContentLoaded', () => {
     showHero();
 
     // 🔽 Close sidebar on mobile
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('active');
+    if (isCompactViewport()) {
+      closeSidebar();
     }
   }
 
@@ -586,8 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadChat(id);
       
         // 🔽 Close sidebar on mobile
-        if (window.innerWidth <= 768) {
-          sidebar.classList.remove('active');
+        if (isCompactViewport()) {
+          closeSidebar();
         }
       };
       chatList.appendChild(li);
@@ -756,14 +771,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('click', (event) => {
     // Only do this on mobile
-    if (window.innerWidth > 768) return;
+    if (!isCompactViewport()) return;
 
     const isClickInsideSidebar = sidebar.contains(event.target);
     const isClickOnHamburger = menuToggle.contains(event.target);
 
     // If click is outside both, close the sidebar
     if (!isClickInsideSidebar && !isClickOnHamburger) {
-      sidebar.classList.remove('active');
+      closeSidebar();
     }
   });
 
@@ -821,5 +836,4 @@ document.getElementById('maslogout-btn').onclick = () => {
     location.reload(); // or redirect to login page
   });
 };
-
 
