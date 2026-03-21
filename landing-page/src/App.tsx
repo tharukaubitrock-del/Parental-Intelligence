@@ -105,7 +105,7 @@ export default function App() {
       <Navbar />
       <div className="relative z-20 bg-[#F8F9FA]">
         {/* Hero & Stats Scroll Sequence */}
-        <div ref={desktopHeroRef} className="relative hidden lg:block">
+        <div ref={desktopHeroRef} className="relative hidden xl:block">
           
           {/* Background Gradient */}
           <div className="absolute top-0 left-0 w-full h-screen z-0 overflow-hidden pointer-events-none">
@@ -166,7 +166,7 @@ export default function App() {
 
         </div>
 
-        <div className="relative overflow-hidden lg:hidden">
+        <div className="relative overflow-hidden xl:hidden">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-[-18%] top-[-6%] h-[320px] w-[320px] rounded-full bg-[#d8f4f2] blur-[110px] opacity-90 sm:h-[420px] sm:w-[420px]" />
             <div className="absolute right-[-18%] top-[8%] h-[320px] w-[320px] rounded-full bg-[#fce4ec] blur-[110px] opacity-90 sm:h-[420px] sm:w-[420px]" />
