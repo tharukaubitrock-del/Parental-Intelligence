@@ -126,14 +126,14 @@ function StagePillar({
 
 function AgeSpecificVisual() {
   return (
-    <div className="relative h-[350px] w-full max-w-[470px] overflow-hidden rounded-[38px] border border-white/70 bg-[linear-gradient(180deg,#f4f8fd_0%,#e7eff9_100%)] px-5 pb-6 pt-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:h-[380px] sm:px-7">
-      <div className="absolute left-1/2 top-5 -translate-x-1/2 rounded-full border border-[#d8e6f5] bg-white/85 px-4 py-2 text-xs font-semibold tracking-[0.16em] text-[#4f6f93] shadow-[0_10px_24px_rgba(42,83,128,0.08)]">
+    <div className="relative h-[390px] w-full max-w-[470px] overflow-hidden rounded-[38px] border border-white/70 bg-[linear-gradient(180deg,#f4f8fd_0%,#e7eff9_100%)] px-4 pb-5 pt-14 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] sm:h-[380px] sm:px-7 sm:pb-6 sm:pt-12">
+      <div className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full border border-[#d8e6f5] bg-white/85 px-4 py-2 text-[11px] font-semibold tracking-[0.16em] text-[#4f6f93] shadow-[0_10px_24px_rgba(42,83,128,0.08)] sm:top-5 sm:text-xs">
         Tailors replies as your child grows
       </div>
 
-      <div className="absolute inset-x-6 bottom-6 top-[88px] rounded-[30px] border border-[#dbe6f2] bg-white/35" />
+      <div className="absolute inset-x-4 bottom-5 top-[118px] rounded-[30px] border border-[#dbe6f2] bg-white/35 sm:inset-x-6 sm:bottom-6 sm:top-[88px]" />
 
-      <div className="relative z-10 flex h-full items-end gap-3">
+      <div className="relative z-10 flex h-full origin-bottom items-end gap-2 px-1 pt-10 sm:gap-3 sm:px-0 sm:pt-0">
         <StagePillar icon={Baby} label="Newborn" age="0-6 mo" height={144} delay={0.1} />
         <StagePillar icon={Home} label="Toddler" age="1-3 yrs" height={182} delay={0.3} />
         <StagePillar icon={School} label="School age" age="4-12" height={236} active delay={0.5} />
