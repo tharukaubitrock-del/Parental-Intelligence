@@ -7,11 +7,20 @@ import {defineConfig, loadEnv} from 'vite';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, __dirname, '');
   const appRoot = path.resolve(__dirname, '..');
+  const pageRoutes = [
+    ['login', 'login.html'],
+    ['register', 'register.html'],
+    ['terms', 'terms.html'],
+    ['privacy-policy', 'privacy-policy.html'],
+    ['refund-policy', 'refund-policy.html'],
+    ['help', 'help.html'],
+  ] as const;
   const devStaticFiles = new Map<string, string>([
-    ['/login.html', path.join(appRoot, 'login.html')],
-    ['/register.html', path.join(appRoot, 'register.html')],
-    ['/terms.html', path.join(appRoot, 'terms.html')],
-    ['/help.html', path.join(appRoot, 'help.html')],
+    ...pageRoutes.flatMap(([route, file]) => [
+      [`/${route}`, path.join(appRoot, file)] as const,
+      [`/${route}/`, path.join(appRoot, file)] as const,
+      [`/${file}`, path.join(appRoot, file)] as const,
+    ]),
     ['/style.css', path.join(appRoot, 'style.css')],
     ['/script.js', path.join(appRoot, 'script.js')],
   ]);

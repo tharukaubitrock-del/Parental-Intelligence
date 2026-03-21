@@ -5,14 +5,100 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/login"
-  to = "/login.html"
+  from = "/login.html"
+  to = "/login"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/login/"
-  to = "/login.html"
+  to = "/login"
   status = 301
+
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/register.html"
+  to = "/register"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/register/"
+  to = "/register"
+  status = 301
+
+[[redirects]]
+  from = "/register"
+  to = "/register.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/terms/"
+  to = "/terms"
+  status = 301
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy-policy.html"
+  to = "/privacy-policy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/privacy-policy/"
+  to = "/privacy-policy"
+  status = 301
+
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/privacy-policy.html"
+  status = 200
+
+[[redirects]]
+  from = "/refund-policy.html"
+  to = "/refund-policy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/refund-policy/"
+  to = "/refund-policy"
+  status = 301
+
+[[redirects]]
+  from = "/refund-policy"
+  to = "/refund-policy.html"
+  status = 200
+
+[[redirects]]
+  from = "/help.html"
+  to = "/help"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/help/"
+  to = "/help"
+  status = 301
+
+[[redirects]]
+  from = "/help"
+  to = "/help.html"
+  status = 200
 
 [[redirects]]
   # proxy any /api/payhere/* to the matching Function

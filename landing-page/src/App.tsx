@@ -15,7 +15,7 @@ import { Footer } from './components/Footer';
 import { Star } from 'lucide-react';
 import piLogo from '../assets/1.png';
 
-const LOGIN_ROUTE = '/login.html';
+const LOGIN_ROUTE = '/login';
 
 function Navbar() {
   return (
