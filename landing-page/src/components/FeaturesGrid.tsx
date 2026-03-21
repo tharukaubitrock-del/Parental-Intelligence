@@ -316,6 +316,8 @@ function Support247Visual() {
 }
 
 export function FeaturesGrid() {
+  const uniformCardHeight = 'min-h-[540px] md:min-h-[670px] lg:min-h-[720px]';
+
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f7fbff_100%)]">
       <div className="pointer-events-none absolute inset-0">
@@ -339,53 +341,49 @@ export function FeaturesGrid() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10">
-          <div className="flex flex-col gap-6 lg:gap-10">
-            <FeatureCard
-              eyebrow="Age Adaptive"
-              title="Age-specific guidance"
-              description="Choose your child’s age and PI adjusts the tone, examples, and advice from newborn stages right through the teen years."
-              className="min-h-[520px] md:min-h-[640px] lg:min-h-[690px]"
-              titleClassName="max-w-[760px]"
-            >
-              <AgeSpecificVisual />
-            </FeatureCard>
+          <FeatureCard
+            eyebrow="Age Adaptive"
+            title="Age-specific guidance"
+            description="Choose your child’s age and PI adjusts the tone, examples, and advice from newborn stages right through the teen years."
+            className={uniformCardHeight}
+            titleClassName="max-w-[760px]"
+          >
+            <AgeSpecificVisual />
+          </FeatureCard>
 
-            <FeatureCard
-              eyebrow="Local Context"
-              title="Sri Lankan-savvy advice"
-              description="Guidance shaped around Sri Lankan routines, family dynamics, school life, and the real pace of home life instead of generic global parenting copy."
-              className="min-h-[520px] md:min-h-[620px] lg:min-h-[650px]"
-              titleClassName="max-w-[760px]"
-            >
-              <SriLankanSavvyVisual />
-            </FeatureCard>
-          </div>
+          <FeatureCard
+            eyebrow="Bilingual Flow"
+            title="සිංහල & English"
+            description={
+              <>
+                Switch smoothly between English and <span className="font-semibold text-[#173a58]">සිංහල</span>, so the conversation always feels natural and comfortable.
+              </>
+            }
+            className={uniformCardHeight}
+            titleClassName="max-w-[760px]"
+          >
+            <LanguageSwitchVisual />
+          </FeatureCard>
 
-          <div className="flex flex-col gap-6 lg:gap-10 lg:pt-24">
-            <FeatureCard
-              eyebrow="Bilingual Flow"
-              title="සිංහල & English"
-              description={
-                <>
-                  Switch smoothly between English and <span className="font-semibold text-[#173a58]">සිංහල</span>, so the conversation always feels natural and comfortable.
-                </>
-              }
-              className="min-h-[540px] md:min-h-[670px] lg:min-h-[720px]"
-              titleClassName="max-w-[760px]"
-            >
-              <LanguageSwitchVisual />
-            </FeatureCard>
+          <FeatureCard
+            eyebrow="Local Context"
+            title="Sri Lankan-savvy advice"
+            description="Guidance shaped around Sri Lankan routines, family dynamics, school life, and the real pace of home life instead of generic global parenting copy."
+            className={uniformCardHeight}
+            titleClassName="max-w-[760px]"
+          >
+            <SriLankanSavvyVisual />
+          </FeatureCard>
 
-            <FeatureCard
-              eyebrow="Always Available"
-              title="24/7 parenting support"
-              description="Whether it is a school-morning rush or a midnight worry, PI stays ready with calm, practical answers whenever questions show up."
-              className="min-h-[520px] md:min-h-[610px] lg:min-h-[650px]"
-              titleClassName="max-w-[760px]"
-            >
-              <Support247Visual />
-            </FeatureCard>
-          </div>
+          <FeatureCard
+            eyebrow="Always Available"
+            title="24/7 parenting support"
+            description="Whether it is a school-morning rush or a midnight worry, PI stays ready with calm, practical answers whenever questions show up."
+            className={uniformCardHeight}
+            titleClassName="max-w-[760px]"
+          >
+            <Support247Visual />
+          </FeatureCard>
         </div>
       </div>
     </section>

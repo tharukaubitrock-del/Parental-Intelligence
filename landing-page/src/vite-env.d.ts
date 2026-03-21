@@ -10,3 +10,13 @@ declare module '*.png' {
   export default src;
 }
 
+interface Window {
+  firebase?: {
+    apps: unknown[];
+    auth: () => {
+      currentUser: unknown;
+      onAuthStateChanged: (callback: (user: unknown) => void) => () => void;
+    };
+  };
+  __PI_AUTH_BOOTSTRAP__?: Promise<'ready' | 'redirected'>;
+}

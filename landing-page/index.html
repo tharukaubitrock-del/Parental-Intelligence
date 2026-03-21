@@ -4,10 +4,83 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Parental Intelligence (PI) — AI Parenting Buddy</title>
+    <style>
+      html.auth-checking body {
+        background: #f8f9fa;
+      }
+
+      html.auth-checking #root {
+        opacity: 0;
+      }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAOQvuRNgJB4Y2YxSP3wwxUCESJ8aREJBA",
+        authDomain: "parental-intelligence.firebaseapp.com",
+        projectId: "parental-intelligence",
+        storageBucket: "parental-intelligence.firebasestorage.app",
+        messagingSenderId: "392531854283",
+        appId: "1:392531854283:web:8698d5a250f82aa54d6c4e",
+        measurementId: "G-Z699GWB1CP"
+      };
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      document.documentElement.classList.add('auth-checking');
+
+      window.__PI_AUTH_BOOTSTRAP__ = new Promise((resolve) => {
+        const auth = window.firebase?.auth?.();
+        if (!auth) {
+          document.documentElement.classList.remove('auth-checking');
+          resolve('ready');
+          return;
+        }
+        let settled = false;
+
+        const finish = (state) => {
+          if (settled) return;
+          settled = true;
+          document.documentElement.classList.remove('auth-checking');
+          resolve(state);
+        };
+
+        const redirectToChat = () => {
+          if (settled) return;
+          settled = true;
+          resolve('redirected');
+          window.location.replace('/login.html');
+        };
+
+        if (auth.currentUser) {
+          redirectToChat();
+          return;
+        }
+
+        const fallbackTimer = window.setTimeout(() => finish('ready'), 1200);
+        const unsubscribe = auth.onAuthStateChanged(
+          (user) => {
+            window.clearTimeout(fallbackTimer);
+            unsubscribe();
+            if (user) {
+              redirectToChat();
+              return;
+            }
+            finish('ready');
+          },
+          () => {
+            window.clearTimeout(fallbackTimer);
+            finish('ready');
+          }
+        );
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
