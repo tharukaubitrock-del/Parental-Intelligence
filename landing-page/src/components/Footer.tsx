@@ -1,5 +1,5 @@
 import React from 'react';
-import piLogo from '../../assets/1.png';
+import piLogo from '../../assets/5.png';
 
 export function Footer() {
   return (
@@ -49,7 +49,7 @@ export function Footer() {
             <a href="https://www.chatpi.lk" className="text-white/80 hover:text-white text-sm font-medium">
               https://www.chatpi.lk
             </a>
-            <div className="text-gray-500 text-xs tracking-wider">© Parental Intelligence. Powered by BITROCK </div>
+            <div className="text-gray-500 text-xs tracking-wider">© Parental Intelligence. Powered by <a href="https://www.thisisbitrock.com" target="_blank" rel="noreferrer" className="text-white/80 hover:text-white">BITROCK</a> </div>
           </div>
           
           <div className="mt-2 flex flex-wrap gap-4 md:mt-0 md:justify-end">
