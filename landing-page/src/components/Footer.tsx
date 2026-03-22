@@ -1,6 +1,13 @@
 import React from 'react';
 import piLogo from '../../assets/5.png';
 
+const footerLinks = [
+  { href: '/help', label: 'Help Centre' },
+  { href: '/terms', label: 'Terms & Conditions' },
+  { href: '/privacy-policy', label: 'Privacy Policy' },
+  { href: '/refund-policy', label: 'Refund Policy' },
+];
+
 export function Footer() {
   return (
     <div className="relative overflow-hidden px-4 pb-10 pt-20 text-white sm:px-6 sm:pb-12 sm:pt-24 md:pt-32">
@@ -49,6 +56,13 @@ export function Footer() {
             <a href="https://www.chatpi.lk" className="text-white/80 hover:text-white text-sm font-medium">
               https://www.chatpi.lk
             </a>
+            <nav aria-label="Footer links" className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500">
+              {footerLinks.map((link) => (
+                <a key={link.href} href={link.href} className="transition-colors hover:text-white/80">
+                  {link.label}
+                </a>
+              ))}
+            </nav>
             <div className="text-gray-500 text-xs tracking-wider">© Parental Intelligence. Powered by <a href="https://www.thisisbitrock.com" target="_blank" rel="noreferrer" className="text-white/80 hover:text-white">BITROCK</a> </div>
           </div>
           
