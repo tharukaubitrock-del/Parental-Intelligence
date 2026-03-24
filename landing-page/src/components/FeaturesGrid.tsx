@@ -353,7 +353,7 @@ export function FeaturesGrid() {
 
           <FeatureCard
             eyebrow="Bilingual Flow"
-            title="සිංහල & English"
+            title="Chat in both සිංහල & English"
             description={
               <>
                 Switch smoothly between English and <span className="font-semibold text-[#173a58]">සිංහල</span>, so the conversation always feels natural and comfortable.
