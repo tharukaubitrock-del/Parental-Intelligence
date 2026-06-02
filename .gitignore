@@ -28,3 +28,6 @@
 /Notes.html
 /img/bot.gif
 /img/family.png
+
+# Local Netlify folder
+.netlify
